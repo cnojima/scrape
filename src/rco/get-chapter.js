@@ -21,12 +21,6 @@ module.exports = (chapterUrl, options) => {
       return ret;
     })
 
-    // .then(pages => {
-    //   l.info(`Chapter ${chapterUrl} has ${pages.length} pages`);
-
-    //   console.log(pages);process.exit();
-    // })
-
     .catch(err => {
       l.error(err);
       process.exit(1);

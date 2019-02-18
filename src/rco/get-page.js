@@ -5,33 +5,37 @@ const cheerio = require('cheerio');
 const l       = require('../util/log');
 
 module.exports = (pageUrl, imgDest, options) => {
-  return req({
-    url: pageUrl,
-    transform: body => cheerio.load(body)
-  })
-    .then($ => {
-      return $('img.img-responsive.scan-page').attr('src');
+  if (!fs.existsSync(imgDest)) {
+    return req({
+      url: pageUrl,
+      transform: body => cheerio.load(body)
     })
+      .then($ => {
+        return $('img.img-responsive.scan-page').attr('src');
+      })
 
-    .then(imgUrl => {
-      l.info(`GET'ing ${imgUrl}`);
+      .then(imgUrl => {
+          l.debug(`GET'ing ${imgUrl}`);
 
-      req.get({
-        method: 'GET',
-        encoding: null,
-        url : imgUrl
-      }).then(function (res) {
-        l.debug(`saving ${imgDest}`);
-        const buffer = Buffer.from(res, 'utf8');
-        fs.writeFileSync(`${imgDest}`, buffer);
-      }).catch(err => {
-        l.error(`error in downloading img ${err}`);
-        throw `wtf: ${imgUrl}`;
-      });
-    })
+          req.get({
+            method: 'GET',
+            encoding: null,
+            url : imgUrl
+          }).then(function (res) {
+            l.debug(`saving ${imgDest}`);
+            const buffer = Buffer.from(res, 'utf8');
+            fs.writeFileSync(`${imgDest}`, buffer);
+          }).catch(err => {
+            l.error(`error in downloading img ${err}`);
+            throw `wtf: ${imgUrl}`;
+          });
+        })
 
-    .catch(err => {
-      l.error(err);
-      process.exit(1);
-    });
+        .catch(err => {
+          l.error(err);
+          process.exit(1);
+        });
+  } else {
+    l.info(`${imgDest} exists - skipping`);
+  }
 }
