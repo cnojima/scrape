@@ -12,14 +12,12 @@ module.exports = [
     description: 'Set this flag to operate on the URL as a collection.',
     name: 'is-collection',
     type: Boolean,
-    // typeLabel: '{underline []}',
   }, {
     alias: 'w',
     defaultValue: false,
-    description: 'Set this flag to operate on the URL as a collection.',
+    description: 'Set this flag to convert webp files to png format.',
     name: 'convertwebp',
     type: Boolean,
-    // typeLabel: '{underline []}',
   }, {
     alias: 'F',
     defaultValue: false,
