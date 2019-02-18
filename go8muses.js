@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+require('./src/util/init');
 /*
 https://www.8muses.com/comics/album/Hentai-and-Manga-English/Alice-no-Takarabako-Mizuryuu-Kei
 */
@@ -21,10 +21,10 @@ const handleErroredBooks = require('./src/books').handleErroredBooks;
 const dump               = require('./src/util/dump');
 const history            = require('./src/util/history');
 
-const cliConfig          = require('./config/cli');
-const cluConfig          = require('./config/clu');
-const cookies            = require('./config/cookies');
-const pupOptions         = require('./config/puppeteer');
+const cliConfig          = require('./config/8muses/cli');
+const cluConfig          = require('./config/8muses/clu');
+const cookies            = require('./config/8muses/cookies');
+const pupOptions         = require('./config/8muses/puppeteer');
 
 const options            = cli(cliConfig);
 const usage              = clu(cluConfig);

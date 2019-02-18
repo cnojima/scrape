@@ -51,7 +51,7 @@ const getPage = (url, dest, page, book) => {
 
       try {
         const img = await page.$$eval(imgQuery, handlePage);
-        const headers = require('../config/headers')(url);
+        const headers = require('../src/config/headers')(url);
 
         // fetch img asset and save
         await req.get({
