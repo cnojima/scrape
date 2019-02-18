@@ -1,0 +1,75 @@
+#!/usr/bin/env node
+
+// root page will have a grid of images
+const zlib = require('zlib');
+const rp = require('request-promise');
+// require('request-promise').debug = true
+const rootUrl = `https://www.8muses.com/comics/album/Various-Authors/Stjepan-Sejic-aka-Shiniez/Sunstone`;
+const cheerio = require('cheerio');
+
+
+function dump(o) {
+  console.log(require('util').inspect(o, null, 2));
+}
+
+
+const options = {
+  url: rootUrl,
+  resolveWithFullResponse: true,
+  gzip: true,
+  headers : {
+    "accept" : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+    "accept-language" : "en-US,en;q=0.9,pt;q=0.8",
+    "cache-control" : "no-cache",
+    "dnt" : "1",
+    "pragma" : "no-cache",
+    "referer" : "https://www.8muses.com/comics/album/BDSM-Fan-Comics/Bondage-Games",
+    "upgrade-insecure-requests" : "1",
+    "user-agent" : "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_2) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36",
+  },
+  transform: function (body) {
+    console.log(body);
+    return cheerio.load(body);
+  }
+};
+
+rp(options)
+  .then(function($) {
+    $(`a.c-tile.t-hover`).each(function(i, el) {
+      const url = `https://www.8muses.com${$(el).attr('href')}`;
+      console.log(i, url);
+
+      const foo = { ...options, url };
+      // dump(foo);
+
+      rp(foo).then(function($) {
+        $(`img`).each(function(i, img) {
+          console.log($(img).attr('src'));
+        });
+      }).catch(function(err) {
+        // handle error
+        console.log('bad');
+        console.log(err);
+        process.exit(err);
+      });
+    });
+  })
+  .catch(function(err) {
+    // handle error
+    console.log('bad');
+    console.log(err);
+    process.exit(err);
+  });
+
+
+
+
+
+// const webp = require('webp-converter');
+// webp.dwebp("input.webp", "output.jpg", "-o", (status, error) => {
+//   if (status === 100) {
+//     console.log('SUCCESS');
+//   } else {
+//     console.log(error);
+//   }
+// });

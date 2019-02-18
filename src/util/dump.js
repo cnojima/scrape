@@ -1,0 +1,1 @@
+module.exports = o => console.log(require('util').inspect(o, null, 2));
