@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-process.env.LOG_LEVEL = 'DEBUG';
-
 global = {
   ...global,
   completedVolumes: [],
@@ -9,7 +7,13 @@ global = {
     length: 0
   },
 };
+
 require('./src/util/init');
+
+const config = require('./src/config');
+
+process.env.LOG_LEVEL = config.logLevel;
+
 const cli         = require('command-line-args');
 const clu         = require('command-line-usage');
 const cliConfig   = require('./src/config/cli-base');
