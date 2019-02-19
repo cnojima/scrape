@@ -22,7 +22,7 @@ module.exports = (pageUrl, imgDest, options) => {
             encoding: null,
             url : imgUrl
           }).then(function (res) {
-            l.debug(`saving ${imgDest}`);
+            l.info(`saving ${imgDest}`);
             const buffer = Buffer.from(res, 'utf8');
             fs.writeFileSync(`${imgDest}`, buffer);
           }).catch(err => {

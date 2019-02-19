@@ -3,7 +3,7 @@ const config = require('./directories');
 
 module.exports = {
   // logger (console) verbosity
-  logLevel     : 'DEBUG',
+  logLevel     : 'INFO',
 
   // number of zip archive of each type of log to keep
   keepLogs     : 5,
