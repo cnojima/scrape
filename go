@@ -21,16 +21,20 @@ if (!options.url) {
   console.log(usage);
   process.exit();
 } else {
-  global.cliOptions = options;
-
-  if (options.url.toLowerCase().indexOf('8muses') > -1) {
-    const start8muse = require('./src/8muses/start')(options);
-    (async () => await start8muse())();
-  } else if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
-    const startrco = require('./src/rco/start')(options);
-    (async () => await startrco())();
-  } else {
+  let start = () => {
     console.log(`\n\n\n[ ${options.url} ] is not supported`.yellow);
     console.log(usage);    
   }
+
+  global.cliOptions = options;
+
+  if (options.url.toLowerCase().indexOf('8muses') > -1) {
+    start = require('./src/8muses/start')(options);
+  } else if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
+    start = require('./src/rco/start')(options);
+  } else if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
+    start = require('./src/mangakakalot/start')(options);
+  }
+
+  (async () => await start())();
 }
