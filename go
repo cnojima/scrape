@@ -34,6 +34,8 @@ if (!options.url) {
     start = require('./src/rco/start')(options);
   } else if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
     start = require('./src/mangakakalot/start')(options);
+  } else if (options.url.toLowerCase().indexOf('mangareader') > -1) {
+    start = require('./src/mangareader/start')(options);
   }
 
   (async () => await start())();
