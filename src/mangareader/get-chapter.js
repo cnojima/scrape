@@ -14,6 +14,11 @@ module.exports = (chapterUrl, options) => {
         ret.push(`https://www.mangareader.net${$(opt).attr('value')}`);
       });
       
+      // mangareader 0-index has no "page" - append it
+      if (ret.length) {
+        ret[0] += '/1';
+      }
+
       return ret;
     })
 

@@ -53,16 +53,18 @@ module.exports = options => {
 
           // /Volumes/cbr/Yotsubato/010
           const imgDest = `${options.collectionPath}/${cleansedChapter}`;
-          mkdirp.sync(imgDest);
           
-          // for cleanup
-          completedChapters.push(imgDest);
 
           // /foo/bar/out/mangareader/comic-name/comic-name-009.cbz
           const cbzDest = `${options.collectionPath}/${path.basename(options.collectionPath)}-${cleansedChapter}.cbz`;
 
           // skip if CBZ exists
           if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
+            mkdirp.sync(imgDest);
+
+            // for cleanup
+            completedChapters.push(imgDest);
+
             const pages = await getChapter(c, options).catch(err => {
               l.error(`[${c}] got error: ${err}`);
             });
@@ -99,7 +101,7 @@ module.exports = options => {
           }
         } else {
           l.log(`DONE with ${options.url}`);
-          chapterCleanup(completedChapters);
+          // chapterCleanup(completedChapters);
         }
       } 
 
