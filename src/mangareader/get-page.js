@@ -2,7 +2,10 @@ const fs      = require('fs');
 const path    = require('path');
 const req     = require('request-promise');
 const cheerio = require('cheerio');
-const l       = require('../util/log');
+
+const config          = require('../config/mangareader');
+const l               = require('../util/log');
+const generateImgName = require('../util/generate-img-name');
 
 module.exports = (pageUrl, imgDest, options) => {
   if (!fs.existsSync(imgDest)) {

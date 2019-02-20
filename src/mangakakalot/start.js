@@ -74,6 +74,7 @@ module.exports = options => {
             const pageIsDone = async function() {
               if (pages.length > 0) {
                 const page = pages.shift();
+
                 const imgName = `${path.basename(page, '.jpg').padStart(3, '0')}.jpg`;
                 const pageDest = `${imgDest}/${imgName}`;
 

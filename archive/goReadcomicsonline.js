@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 require('./src/util/init');
 
-process.env.LOG_LEVEL = 'INFO';
-
 const fs              = require('fs');
 const path            = require('path');
 const mkdirp          = require('mkdirp');

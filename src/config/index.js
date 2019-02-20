@@ -6,10 +6,28 @@ const logging = require('./logger');
 
 let config = {
   // EXTRA debug logging, slow as hell.
-  debugMode    : false,
+  debugMode        : false,
 
   // STDOUT debug output on fetch/request calls
-  debugRequest : false,
+  debugRequest     : false,
+
+  // remove source files after CBZ creations
+  nukeSource       : true,
+
+  // throttled number of simultaneous requests
+  throttled        : 20,
+
+  // request/request-promise timeout in ms
+  reqTimeout       : 15000,
+
+  // skip 'omake' chapters
+  skipOmake : true,
+
+  // padding length in chapter names
+  chapterPadLength : 3,
+
+  // padding length in image names
+  imgPadLength     : 3,
 };
 
 config = { ...config, ...dirs, ...logging };

@@ -2,14 +2,17 @@
   process.env.LOG_LEVEL = ERROR | QUIET | WARN | LOG | INFO | DEBUG
  */
 
-process.env.LOG_LEVEL = process.env.LOG_LEVEL || 'LOG';
+process.env.LOG_LEVEL = (global.config && global.config.logLevel)
+  ? global.config.logLevel
+  : (process.env.LOG_LEVEL) 
+    ? process.env.LOG_LEVEL 
+    : 'LOG';
 
 const fs           = require('fs');
 const mkdirp       = require('mkdirp');
 const DEBUG_LOG    = require('../config/logger').DEBUG_LOG;
 const ERROR_LOG    = require('../config/logger').ERROR_LOG;
 const INFO_LOG     = require('../config/logger').INFO_LOG;
-const STANDARD_LOG = require('../config/logger').STANDARD_LOG;
 const WARN_LOG     = require('../config/logger').WARN_LOG;
 const levelMap = {};
 const levels = {
@@ -20,6 +23,7 @@ const levels = {
   INFO  : 5,
   DEBUG : 8
 };
+let STANDARD_LOG = require('../config/logger').STANDARD_LOG;
 let currentLevel;
 
 levelMap[ERROR_LOG]    = 0;
@@ -28,6 +32,14 @@ levelMap[STANDARD_LOG] = 3;
 levelMap[INFO_LOG]     = 5;
 levelMap[DEBUG_LOG]    = 8;
 
+
+/**
+ * set a custom log name
+ * @param {!String} destFile
+ */
+function setLogName(destFile) {
+  STANDARD_LOG = destFile;
+}
 
 /**
  * pad zero strings for timestamp
@@ -61,11 +73,6 @@ function padRight(s) {
   return s.padEnd(maxLen, ' ');
 }
 
-function getForkName() {
-  return (global.appName || 'main').toUpperCase();
-  // return (padRight(padLeft(global.appName || 'main'))).toUpperCase();
-}
-
 
 /**
  * decorate the timestamp
@@ -80,7 +87,6 @@ function decorateTimeStamp(s) {
       d.getFullYear(), '-', padZero(d.getMonth() + 1), '-', padZero(d.getDate()), ' ',
       padZero(d.getHours()), ':', padZero(d.getMinutes()), ':', padZero(d.getSeconds()),
     ']',
-    '[', getForkName(), ']',
     s
   ].join('');
 }
@@ -194,6 +200,7 @@ function debug(s) {
 }
 
 module.exports = {
+  setLogName,
   std   : log,
   log   : log,
   info  : info,

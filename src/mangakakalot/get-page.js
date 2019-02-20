@@ -2,6 +2,8 @@ const fs      = require('fs');
 const path    = require('path');
 const req     = require('request-promise');
 const cheerio = require('cheerio');
+
+const config  = require('../config/mangakakalot');
 const l       = require('../util/log');
 
 module.exports = (imgUrl, imgDest, options) => {
@@ -11,6 +13,7 @@ module.exports = (imgUrl, imgDest, options) => {
     return req.get({
       method: 'GET',
       encoding: null,
+      timeout: config.reqTimeout,
       url : imgUrl
     }).then(function (res) {
       l.debug(`saving ${imgDest}`);
@@ -18,7 +21,7 @@ module.exports = (imgUrl, imgDest, options) => {
       fs.writeFileSync(imgDest, buffer);
     }).catch(err => {
       l.error(`error in downloading img ${err}`);
-      throw `wtf: ${imgUrl}`;
+      // throw `wtf: ${imgUrl}`;
     });
   } else {
     l.info(`${imgDest} exists - skipping`);
