@@ -12,11 +12,13 @@ const tileQuery   = require('./queries').tileQuery;
 
 /**
  * scrapes one book
- * @param {!string} bookUrl  URL to book TOC
+ * @param {!object} options  
  * @param {!PuppetPage} page
  * @param {!string} destPath  FQDN path to book save
  */
-const getBook = function(bookUrl, page, destPath) {
+const getBook = function(options, page, destPath) {
+  const bookUrl = options.url;
+
   return new Promise(async function(resolve, reject) {
     l.log(`[ @getBook ] going to ${bookUrl}`);
 
@@ -26,15 +28,13 @@ const getBook = function(bookUrl, page, destPath) {
     l.debug(`mkdirp ${dest}`);
     mkdirp.sync(dest);
 
-    // global.errors[dest] = false;
-
     await page.goto(bookUrl);
 
-    await getPages(page, dest, bookUrl, getBook).catch(err => {
+    await getPages(page, dest, bookUrl, getBook, options).catch(err => {
       l.error(`ERROR: @getBook caught error: ${err}`);
     });
 
-    if (!fs.existsSync(bookName) || global.cliOptions['force-archive'] === true) {
+    if (!fs.existsSync(bookName) || options['force-archive'] === true) {
       await createCbz(dest, bookName);
       global.completedVolumes.push(dest);
     } else {
@@ -52,15 +52,17 @@ const getBook = function(bookUrl, page, destPath) {
  * @param {PuppetPage} page
  * @return {Promise}
  */
-const getBooks = async (pageUrl, page, destPath) => {
+const getBooks = async (options, page, destPath) => {
+  const pageUrl = options.url;
+
   await page.goto(pageUrl);
   const books = await page.$$eval(tileQuery, handleTiles);
 
   l.log(`[ @getBooks ] found [ ${books.length} volumes ] to process`);
 
   while (books.length > 0) {
-    const bookUrl = books.shift();
-    await getBook(bookUrl, page, destPath);
+    options.url = books.shift();
+    await getBook(options, page, destPath);
   }
 };
 

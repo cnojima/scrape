@@ -39,9 +39,9 @@ module.exports = options => {
       await page.setExtraHTTPHeaders(headers);
 
       if (options["is-collection"]) {
-        await getBooks(options.url, page, destPath);
+        await getBooks(options, page, destPath);
       } else {
-        await getBook(options.url, page, destPath);
+        await getBook(options, page, destPath);
       }
 
       if (global.errors.length > 0) {

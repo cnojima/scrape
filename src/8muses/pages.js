@@ -33,7 +33,7 @@ const handlePage = arr => {
   return ret;
 }
 
-const getPage = (url, dest, page, book) => {
+const getPage = (url, dest, page, book, options) => {
   return new Promise(async function(resolve, reject) {
     l.debug(`[ @getPage ] getting page from ${url}`);
 
@@ -44,9 +44,9 @@ const getPage = (url, dest, page, book) => {
     if (fs.existsSync(finalImg)) {
       resolve();
     } else if (fs.existsSync(imgDest)) {
-      if (global.cliOptions.convertwebp) {
+      if (options.convertwebp) {
         await webp2png(imgDest, finalImg).catch(err => {
-          if (global.cliOptions["is-collection"]) {
+          if (options["is-collection"]) {
             reject(err);
           }
         });
@@ -76,7 +76,7 @@ const getPage = (url, dest, page, book) => {
         });
 
         // convert webp to png
-        if (global.cliOptions.convertwebp) {
+        if (options.convertwebp) {
           await webp2png(imgDest, finalImg).catch(err => {
             queueError(err, book, url);
             resolve(); // continue silently as we'll retry the bad ones
@@ -95,7 +95,7 @@ const getPage = (url, dest, page, book) => {
   });
 }
 
-const getPages = async (page, dest, book, fnGetBook) => {
+const getPages = async (page, dest, book, fnGetBook, options) => {
   if (!getBook) {
     getBook = fnGetBook;
   }
@@ -105,7 +105,7 @@ const getPages = async (page, dest, book, fnGetBook) => {
   l.log(`[ @getPages ] Current volume has ${pages.length} pages`);
 
   while(pages.length > 0) {
-    await getPage(pages.shift(), dest, page, book).catch(err => {
+    await getPage(pages.shift(), dest, page, book, options).catch(err => {
       l.error(`[ @getPages ] caught err: ${err}`);
     });
     process.stdout.write(`...${pages.length} left          \r`);
