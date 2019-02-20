@@ -6,7 +6,6 @@ module.exports = arr => {
       let a = arr[i];
       
       if (a.innerHTML.indexOf('iframe') < 0) {
-        // console.log(a.href);
         ret.push(a.href);
       }
     }

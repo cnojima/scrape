@@ -1,6 +1,5 @@
-const cliOpts = require('./cli.js');
 
-module.exports = [
+module.exports = (cliOpts) => [
   {
     header: 'Usage',
     content: 'Scrape a single volume, or {italic collection}.'
@@ -14,4 +13,4 @@ module.exports = [
     header: 'Options',
     optionList: cliOpts
   }
-]
+];

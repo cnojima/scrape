@@ -1,8 +1,10 @@
 const fs          = require('fs');
 const path        = require('path');
 const mkdirp      = require('mkdirp');
+const Case        = require('case');
 
-const createCbz   = require('./util/create-cbz');
+const l           = require('../util/log');
+const createCbz   = require('../util/create-cbz');
 const getPages    = require('./pages').getPages;
 const handleTiles = require('./tiles');
 const tileQuery   = require('./queries').tileQuery;
@@ -10,31 +12,33 @@ const tileQuery   = require('./queries').tileQuery;
 
 /**
  * scrapes one book
- * @param {!string} book  URL to book TOC
+ * @param {!object} options  
  * @param {!PuppetPage} page
  * @param {!string} destPath  FQDN path to book save
  */
-const getBook = function(book, page, destPath) {
-  return new Promise(async function(resolve, reject) {
-    console.log(`[ @getBook ] going to ${book}`);
+const getBook = function(options, page, destPath) {
+  const bookUrl = options.url;
 
-    const dir = path.basename(book);
+  return new Promise(async function(resolve, reject) {
+    l.log(`[ @getBook ] going to ${bookUrl}`);
+
+    const dir = Case.title(path.basename(bookUrl));
     const dest = `${destPath}/${dir}`;
     const bookName = `${destPath}/${path.basename(destPath)}-${dir}.cbz`;
+    l.debug(`mkdirp ${dest}`);
     mkdirp.sync(dest);
 
-    // global.errors[dest] = false;
+    await page.goto(bookUrl);
 
-    await page.goto(book);
-
-    await getPages(page, dest, book, getBook).catch(err => {
-      console.log(`ERROR: @getBook caught error: ${err}`);
+    await getPages(page, dest, bookUrl, getBook, options).catch(err => {
+      l.error(`ERROR: @getBook caught error: ${err}`);
     });
 
-    if (!fs.existsSync(bookName) || global.cliOptions['force-archive'] === true) {
+    if (!fs.existsSync(bookName) || options['force-archive'] === true) {
       await createCbz(dest, bookName);
+      global.completedVolumes.push(dest);
     } else {
-      console.log(`[ @getBook ] found ${bookName} - not rebuilding CBZ`);
+      l.info(`[ @getBook ] found ${bookName} - not rebuilding CBZ`);
     }
 
     resolve();
@@ -48,22 +52,25 @@ const getBook = function(book, page, destPath) {
  * @param {PuppetPage} page
  * @return {Promise}
  */
-const getBooks = async (page, destPath) => {
+const getBooks = async (options, page, destPath) => {
+  const pageUrl = options.url;
+
+  await page.goto(pageUrl);
   const books = await page.$$eval(tileQuery, handleTiles);
 
-  console.log(`[ @getBooks ] found [ ${books.length} volumes ] to process`);
+  l.log(`[ @getBooks ] found [ ${books.length} volumes ] to process`);
 
   while (books.length > 0) {
-    const book = books.shift();
-    await getBook(book, page, destPath);
+    options.url = books.shift();
+    await getBook(options, page, destPath);
   }
 };
 
 
 
 const handleErroredBooks = async (page, destPath) => {
-  console.log(`\n[ @handleErroredBooks ] redo-failures.  We have ${global.errors.length} volumes to redo.`.yellow);
-  console.log(global.errors);
+  l.log(`\n[ @handleErroredBooks ] redo-failures.  We have ${global.errors.length} volumes to redo.`.yellow);
+  l.log(global.errors);
   const redoBooks = [];
 
   for(let url in global.errors) {

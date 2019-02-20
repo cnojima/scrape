@@ -8,24 +8,25 @@ module.exports = [
     typeLabel: '{underline https://www.8muses.com/path/to/series}',
   }, {
     alias: 'c',
-    defaultValue: false,
+    defaultValue: true,
     description: 'Set this flag to operate on the URL as a collection.',
     name: 'is-collection',
     type: Boolean,
-    // typeLabel: '{underline []}',
   }, {
-    alias: 'w',
-    defaultValue: false,
-    description: 'Set this flag to operate on the URL as a collection.',
-    name: 'convertwebp',
-    type: Boolean,
-    // typeLabel: '{underline []}',
+    alias: 'n',
+    description: 'Explicitly set series name.',
+    name: 'name',
+    type: String,
   }, {
     alias: 'F',
     defaultValue: false,
     description: 'Overwrite existing CBZ archives when running this operation.',
     name: 'force-archive',
     type: Boolean,
-    // typeLabel: '{underline []}',
-  },
+  }, {
+    alias: 'h',
+    description: 'This help',
+    name: 'help',
+    type: Boolean
+  }
 ];

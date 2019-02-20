@@ -1,6 +1,5 @@
-const fs = require('fs');
-
-
+const fs          = require('fs');
+const l           = require('./log');
 const historyFile = `${process.cwd()}/out/history.json`;
 
 module.exports = url => {
@@ -13,9 +12,8 @@ module.exports = url => {
   if (history.indexOf(url) < 0) {
     history.push(url);
   } else {
-    console.log(`[WARN] repeat scrape of [ ${url} ]`.yellow);
+    l.warn(`repeat scrape of [ ${url} ]`);
   }
-
 
   fs.writeFileSync(historyFile, JSON.stringify(history.sort(), null, 2), 'utf8');
 }

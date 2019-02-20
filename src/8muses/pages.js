@@ -4,8 +4,14 @@ const req                     = require('request-promise');
 
 const handleTiles             = require('./tiles');
 const { tileQuery, imgQuery } = require('./queries');
-const webp2png                = require('./util/webp-to-png');
-const queueError              = require('./util/queue-error');
+const config                  = require('../config');
+const webp2png                = require('../util/webp-to-png');
+const queueError              = require('../util/queue-error');
+const l                       = require('../util/log');
+
+require('request-promise').debug = config.debugMode;
+
+
 
 let getBook;
 
@@ -16,21 +22,20 @@ const handlePage = arr => {
 
   if (arr.length === 1) {
     arr.forEach(img => {
-      // console.log(img.src);
       ret = img.src;
     });
   } else if(arr.length > 1) {
-    console.log(`[WARN] @handlePage found more than 1 [${imgQuery}]`.yellow);
+    l.warn(`@handlePage found more than 1 [${imgQuery}]`.yellow);
   } else {
-    console.log(`[ERROR] @handlePage did not an image that matches ${imgQuery}`.red);
+    l.error(`@handlePage did not an image that matches ${imgQuery}`.red);
   }
 
   return ret;
 }
 
-const getPage = (url, dest, page, book) => {
+const getPage = (url, dest, page, book, options) => {
   return new Promise(async function(resolve, reject) {
-    // console.log(`[ @getPage ] getting page from ${url}`);
+    l.debug(`[ @getPage ] getting page from ${url}`);
 
     const pageNum = path.basename(url).padStart(3, '0');
     const imgDest = `${dest}/${pageNum}.webp`;
@@ -39,9 +44,9 @@ const getPage = (url, dest, page, book) => {
     if (fs.existsSync(finalImg)) {
       resolve();
     } else if (fs.existsSync(imgDest)) {
-      if (global.cliOptions.convertwebp) {
+      if (options.convertwebp) {
         await webp2png(imgDest, finalImg).catch(err => {
-          if (global.cliOptions["is-collection"]) {
+          if (options["is-collection"]) {
             reject(err);
           }
         });
@@ -51,7 +56,9 @@ const getPage = (url, dest, page, book) => {
 
       try {
         const img = await page.$$eval(imgQuery, handlePage);
-        const headers = require('../config/headers')(url);
+        const headers = require('../config/8muses/headers')(url);
+
+        l.debug(`@getPage trying ${img} for page img`);
 
         // fetch img asset and save
         await req.get({
@@ -62,23 +69,24 @@ const getPage = (url, dest, page, book) => {
         }).then(function (res) {
           const buffer = Buffer.from(res, 'utf8');
           fs.writeFileSync(imgDest, buffer);
+          l.debug(`saved ${imgDest}`);
         }).catch(err => {
-          console.log(`error in downloading img ${err}`);
+          l.error(`error in downloading img ${err}`);
           reject(`wtf: ${img}`)
         });
 
         // convert webp to png
-        if (global.cliOptions.convertwebp) {
+        if (options.convertwebp) {
           await webp2png(imgDest, finalImg).catch(err => {
             queueError(err, book, url);
             resolve(); // continue silently as we'll retry the bad ones
           });
         }
       } catch (err) {
-        console.log(` --- page.$$eval could not match ${imgQuery}`);
+        l.error(` --- page.$$eval could not match ${imgQuery} [ ${err} ]`);
         // instead of an `image`/leaf-node, we have an `album`
         // reject('no img found ')
-        console.log(`[INFO] expected an image, got an album - recursing in`.cyan);
+        l.warn(`expected an image, got an album - recursing in`.cyan);
 
         await getBook(url, page, dest);
       }
@@ -87,18 +95,18 @@ const getPage = (url, dest, page, book) => {
   });
 }
 
-const getPages = async (page, dest, book, fnGetBook) => {
+const getPages = async (page, dest, book, fnGetBook, options) => {
   if (!getBook) {
     getBook = fnGetBook;
   }
 
   const pages = await page.$$eval(tileQuery, handleTiles);
 
-  console.log(`[ @getPages ] Current volume has ${pages.length} pages`);
+  l.log(`[ @getPages ] Current volume has ${pages.length} pages`);
 
   while(pages.length > 0) {
-    await getPage(pages.shift(), dest, page, book).catch(err => {
-      console.log(`[ @getPages ] caught err: ${err}`);
+    await getPage(pages.shift(), dest, page, book, options).catch(err => {
+      l.error(`[ @getPages ] caught err: ${err}`);
     });
     process.stdout.write(`...${pages.length} left          \r`);
   }

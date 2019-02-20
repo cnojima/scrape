@@ -1,6 +1,7 @@
 const fs       = require('fs');
 const path     = require('path');
 const archiver = require('archiver');
+const l        = require('./log');
 
 const createCbz = (dirPath, bookName) => {
   return new Promise(async function(resolve, reject) {
@@ -10,13 +11,12 @@ const createCbz = (dirPath, bookName) => {
       zlib: { level: 9 } // Sets the compression level.
     });
      
-    console.log(`[ @createCbz ] for ${bookName}`);
-
+    l.debug(`[ @createCbz ] for ${bookName}`);
 
     // listen for all archive data to be written
     // 'close' event is fired only when a file descriptor is involved
     output.on('close', function() {
-      console.log(`[ @createCbz ] ${path.basename(bookName)} finalized at ${(archive.pointer() / 1024 / 1024).toFixed(1)} Mb`.green);
+      l.log(`[ @createCbz ] ${path.basename(bookName)} finalized at ${(archive.pointer() / 1024 / 1024).toFixed(1)} Mb`.green);
     });
      
     // good practice to catch warnings (ie stat failures and other non-blocking errors)

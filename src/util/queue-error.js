@@ -12,6 +12,4 @@ module.exports = (badWebp, book, pageUrl) => {
   } else if (global.errors[volumeRoot]) {
     global.errors[volumeRoot].page.push(pageUrl);
   }
-
-  // console.log(global.errors);
 }

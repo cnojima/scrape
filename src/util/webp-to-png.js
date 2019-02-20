@@ -10,20 +10,18 @@ module.exports = function(imgDest, finalImg) {
     const child = spawn(dwebp, args.split(' '));
 
     child.on('close', status => {
-      // console.log(`status on dwebp child ${status}`);
-
       fs.unlinkSync(imgDest);
 
       if (status === 0) {
         resolve();
       } else {
-        console.log(`[WARN] webp2png failed for ${imgDest}`.yellow);
+        l.warn(`webp2png failed for ${imgDest}`.yellow);
         reject(imgDest);
       }
     });
 
     child.on('error', err => {
-      console.log(`ERROR in dwebp`, err);
+      l.error(`ERROR in dwebp`, err);
       reject(err);
     });
   });
