@@ -12,9 +12,10 @@ module.exports = (chapterUrl, options) => {
       
       $(`select.selectpicker option`).each((i, opt) => {
         const pageNum = $(opt).attr('value');
+        const url = `${chapterUrl}/${pageNum}`;
         
-        if (pageNum > 0 && ret.indexOf(pageNum) < 0) {
-          ret.push(`${chapterUrl}/${pageNum}`);
+        if (pageNum > 0 && ret.indexOf(url) < 0) {
+          ret.push(url);
         }
       });
       

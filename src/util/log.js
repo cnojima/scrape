@@ -38,8 +38,19 @@ levelMap[DEBUG_LOG]    = 8;
  * @param {!String} destFile
  */
 function setLogName(destFile) {
+  console.log(`setting log name to [ ${destFile} ]`.white);
   STANDARD_LOG = destFile;
 }
+
+/**
+ * set log level
+ * @param {!String} LOG_LEVEL
+ */
+function setLogLevel(LOG_LEVEL) {
+  console.log(`setting LOG_LEVEL to ${LOG_LEVEL}`.white)
+  process.env.LOG_LEVEL = LOG_LEVEL;
+}
+
 
 /**
  * pad zero strings for timestamp
@@ -200,6 +211,7 @@ function debug(s) {
 }
 
 module.exports = {
+  setLogLevel,
   setLogName,
   std   : log,
   log   : log,

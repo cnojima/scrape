@@ -46,7 +46,8 @@ module.exports = function(
           l.debug(`@getPage_forked: found ${imgGuess} - skipping`);
         } else {
           pipes++;
-          getPage(pageUrl, imgDestDir, options)
+
+          getPage(pageUrl, imgDestDir, options, config)
             .then(() => {
               pipes--;
             })

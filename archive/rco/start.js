@@ -4,7 +4,7 @@ const mkdirp          = require('mkdirp');
 const rimraf          = require('rimraf');
 const Case            = require('case');
 
-const config          = require('../config/mangakakalot');
+const config          = require('../config/rco');
 const history         = require('../util/history');
 const l               = require('../util/log');
 const createCbz       = require('../util/create-cbz');
@@ -16,19 +16,18 @@ const getPage         = require('./get-page');
 
 
 module.exports = options => {
-  l.log('============================');
-  l.log(`START using options:`.green);
-  for (const key in options) {
-    l.info(`   ${key} : ${options[key]}`);
-  }
-
-  history(options.url);
 
   try {
     fs.accessSync(config.outDir);
 
-    // build up collection -> chapter -> img paths, /Volumes/cbr/Yotsubato
-    options.collectionPath = path.resolve(process.cwd, `${config.outDir}/${Case.title(path.basename(options.url))}`);
+
+    // build up collection -> chapter -> img paths
+    options.collectionPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
+
+    // RCO adds `-YYYY` to the name
+    if (options.collectionPath.search(/\ [\d]{4}$/) > -1) {
+      options.collectionPath = options.collectionPath.substring(0, (options.collectionPath.length - 5));
+    }
 
     mkdirp.sync(options.collectionPath);
     
@@ -44,23 +43,25 @@ module.exports = options => {
       l.debug(`chapters`);
       l.debug(chapters.join('\n   '));
 
+
+
+
+
+
       const chapterIsDone = async () => {
         if (chapters.length > 0) {
           const c = chapters.shift();
-          l.info(`working on ${c}`); // https://mangakakalot.com/chapter/yotsubato/chapter_98
+          l.info(`working on ${c}`);
 
-          // chapter_98 => 098
-          const cleansedChapter = path.basename(c).replace('chapter_', '').padStart(3, '0');
-
-          // /Volumes/cbr/Yotsubato/010
-          const imgDest = `${options.collectionPath}/${cleansedChapter}`;
+          // /foo/bar/out/rco/comic-name/009
+          const imgDest = `${options.collectionPath}/${path.basename(c).padStart(3, '0')}`;
           mkdirp.sync(imgDest);
           
           // for cleanup
           completedChapters.push(imgDest);
 
-          // /foo/bar/out/mangakakalot/comic-name/comic-name-009.cbz
-          const cbzDest = `${options.collectionPath}/${path.basename(options.collectionPath)}-${cleansedChapter}.cbz`;
+          // /foo/bar/out/rco/comic-name/comic-name-009.cbz
+          const cbzDest = `${options.collectionPath}/${path.basename(options.collectionPath)}-${path.basename(c).padStart(3, '0')}.cbz`;
 
           // skip if CBZ exists
           if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
@@ -74,9 +75,7 @@ module.exports = options => {
             const pageIsDone = async function() {
               if (pages.length > 0) {
                 const page = pages.shift();
-
-                const imgName = `${path.basename(page, '.jpg').padStart(3, '0')}.jpg`;
-                const pageDest = `${imgDest}/${imgName}`;
+                const pageDest = `${imgDest}/${path.basename(page).padStart(3, '0')}.jpg`;
 
                 if (fs.existsSync(pageDest)) {
                   l.debug(`found ${pageDest} - skipping`);

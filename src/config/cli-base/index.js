@@ -13,6 +13,11 @@ module.exports = [
     name: 'is-collection',
     type: Boolean,
   }, {
+    alias: 'n',
+    description: 'Explicitly set series name.',
+    name: 'name',
+    type: String,
+  }, {
     alias: 'F',
     defaultValue: false,
     description: 'Overwrite existing CBZ archives when running this operation.',

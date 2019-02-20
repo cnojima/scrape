@@ -11,6 +11,9 @@ let config = {
   // STDOUT debug output on fetch/request calls
   debugRequest     : false,
 
+  // use the site-specific getPage controller
+  useCustomGetPage : false,
+
   // remove source files after CBZ creations
   nukeSource       : true,
 
@@ -21,13 +24,17 @@ let config = {
   reqTimeout       : 15000,
 
   // skip 'omake' chapters
-  skipOmake : true,
+  skipOmake        : true,
 
   // padding length in chapter names
   chapterPadLength : 3,
 
   // padding length in image names
   imgPadLength     : 3,
+
+  // querySelector for <img />
+  imgSelector      : '',
+
 };
 
 config = { ...config, ...dirs, ...logging };

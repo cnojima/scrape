@@ -21,17 +21,9 @@ const pupOptions         = require('../config/8muses/puppeteer');
  * @return {Function}
  */
 module.exports = options => {
-  l.log('============================');
-  l.log(`START using options:`.green);
-  for (const key in options) {
-    l.info(`   ${key} : ${options[key]}`);
-  }
 
-  history(options.url);
-
-  const rootUrl  = options.url;
-  const headers  = require('../config/8muses/headers')(rootUrl);
-  const destPath = path.resolve(process.cwd, `${config.outDir}/${Case.title(path.basename(rootUrl))}`);
+  const headers  = require('../config/8muses/headers')(options.url);
+  const destPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
 
   try {
     fs.accessSync(config.outDir);
@@ -47,9 +39,9 @@ module.exports = options => {
       await page.setExtraHTTPHeaders(headers);
 
       if (options["is-collection"]) {
-        await getBooks(rootUrl, page, destPath);
+        await getBooks(options.url, page, destPath);
       } else {
-        await getBook(rootUrl, page, destPath);
+        await getBook(options.url, page, destPath);
       }
 
       if (global.errors.length > 0) {

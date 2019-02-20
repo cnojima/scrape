@@ -2,5 +2,11 @@ const config = require('../');
 
 module.exports = {
   ...config,
-  outDir: `/Volumes/cbr/Manga`
+
+  logLevel: 'DEBUG',
+
+  // outDir: `/Volumes/cbr/Manga`,
+
+  // img selector
+  imgSelector: 'img#img',
 };

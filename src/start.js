@@ -4,36 +4,34 @@ const mkdirp          = require('mkdirp');
 const rimraf          = require('rimraf');
 const Case            = require('case');
 
-const config          = require('../config/funmanga');
-const getPageParallel = require('../common/get-page-parallel');
-const history         = require('../util/history');
-const l               = require('../util/log');
-const createCbz       = require('../util/create-cbz');
-const chapterCleanup  = require('../util/chapter-cleanup');
-const generateImgName = require('../util/generate-img-name');
-const guessImageName  = require('../util/guess-image-name');
-
-const getCollection   = require('./get-collection');
-const getChapter      = require('./get-chapter');
-const getPage         = require('./get-page');
+const getPageParallel = require('./common/get-page-parallel');
+const getPageCommon   = require('./common/get-page');
+const l               = require('./util/log');
+const chapterCleanup  = require('./util/chapter-cleanup');
+const generateSeqName = require('./util/generate-sequence-name.js');
 
 
-module.exports = options => {
-  l.setLogName(`${config.logDir}/${Case.snake(path.basename(options.url))}.log`);
+module.exports = (options, config, site) => {
+  let getPage;
+  const getCollection   = require(`./${site}/get-collection`);
+  const getChapter      = require(`./${site}/get-chapter`);
 
-  l.log('============================');
-  l.log(`START using options:`.green);
-  for (const key in options) {
-    l.log(`   ${key} : ${options[key]}`);
+  if (config.useCustomGetPage) {
+    getPage = require(`./${site}/get-page`);
+  } else {
+    getPage = getPageCommon;
   }
-
-  history(options.url);
 
   try {
     fs.accessSync(config.outDir);
 
     // build up collection -> chapter -> img paths, /Volumes/cbr/Manga/Yotsubato
-    options.collectionPath = path.resolve(process.cwd, `${config.outDir}/${Case.title(path.basename(options.url))}`);
+    options.collectionPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
+
+    // RCO adds `-YYYY` to the name
+    if (site === 'rco' && options.collectionPath.search(/\ [\d]{4}$/) > -1) {
+      options.collectionPath = options.collectionPath.substring(0, (options.collectionPath.length - 5));
+    }
 
     mkdirp.sync(options.collectionPath);
     
@@ -62,7 +60,7 @@ module.exports = options => {
 
             l.info(`working on ${c}`);
 
-            const cleansedChapter = path.basename(c).padStart(config.chapterPadLength, '0');
+            const cleansedChapter = generateSeqName(c, config);
 
             // /Volumes/cbr/Yotsubato/010
             const imgDestDir = `${options.collectionPath}/${cleansedChapter}`;
@@ -96,7 +94,7 @@ module.exports = options => {
 
               try {
                 await getThePages();
-              } catch(err) {
+              } catch (err) {
                 l.error(`async get-page-parallel failure: ${err}`);
               }
 

@@ -2,5 +2,11 @@ const config = require('../');
 
 module.exports = {
   ...config,
-  outDir: `/Volumes/cbr/Western`
+
+  imgSelector: 'img.img-responsive.scan-page',
+ 
+  // outDir: `/Volumes/cbr/Western`,
+
+  logLevel: 'DEBUG',
+
 };

@@ -3,11 +3,10 @@ const path            = require('path');
 const req             = require('request-promise');
 const cheerio         = require('cheerio');
 
-const config          = require('../config/funmanga');
 const l               = require('../util/log');
-const generateImgName = require('../util/generate-img-name');
+const generateImgName = require('../util/generate-sequence-name');
 
-module.exports = (pageUrl, imgDestDir, options) => {
+module.exports = (pageUrl, imgDestDir, options, config) => {
   // go to HTML page
   l.debug(`@getPage going to [ ${pageUrl} ] for [ ${imgDestDir} ]`.cyan)
 
@@ -16,10 +15,8 @@ module.exports = (pageUrl, imgDestDir, options) => {
     timeout: config.reqTimeout,
     transform: body => cheerio.load(body)
   })
-    .then($ => {
-      // find page img
-      return $('img#chapter_img.img-responsive').attr('src');
-    })
+    
+    .then($ => $(config.imgSelector).attr('src'))
 
     .then(imgUrl => {
       const ext = path.extname(imgUrl);
@@ -49,6 +46,6 @@ module.exports = (pageUrl, imgDestDir, options) => {
 
     .catch(err => {
       l.error(err);
-      process.exit(1);
+      // process.exit(1);
     });
 }

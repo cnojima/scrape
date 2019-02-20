@@ -1,6 +1,7 @@
 const req     = require('request-promise');
 const cheerio = require('cheerio');
 const l       = require('../util/log');
+const config  = require('../config/mangakakalot');
 
 module.exports = (chapterUrl, options) => {
   return req({
@@ -10,7 +11,7 @@ module.exports = (chapterUrl, options) => {
     .then($ => {
       const ret = [];
       
-      $(`div#vungdoc img`).each((i, opt) => {
+      $(config.imgSelector).each((i, opt) => {
         ret.push($(opt).attr('src'));
       });
       

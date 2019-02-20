@@ -2,5 +2,14 @@ const config = require('../');
 
 module.exports = {
   ...config,
-  outDir: `/Volumes/cbr/Manga`
+
+  logLevel: 'DEBUG',
+
+  // outDir: `/Volumes/cbr/Manga`,
+  outDir: `${process.cwd()}/out`,
+
+  // img selector
+  imgSelector: 'div#vungdoc img',
+
+  useCustomGetPage: true,
 };
