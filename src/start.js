@@ -1,25 +1,30 @@
-const fs              = require('fs');
-const path            = require('path');
-const mkdirp          = require('mkdirp');
-const rimraf          = require('rimraf');
-const Case            = require('case');
+const fs                  = require('fs');
+const path                = require('path');
+const mkdirp              = require('mkdirp');
+const rimraf              = require('rimraf');
+const Case                = require('case');
 
-const getPageParallel = require('./common/get-page-parallel');
-const getPageCommon   = require('./common/get-page');
-const l               = require('./util/log');
-const chapterCleanup  = require('./util/chapter-cleanup');
-const generateSeqName = require('./util/generate-sequence-name.js');
+const getPageParallel     = require('./common/get-page-parallel');
+const getPageCommon       = require('./common/get-page');
+const getCollectionCommon = require('./common/get-collection');
+const l                   = require('./util/log');
+const chapterCleanup      = require('./util/chapter-cleanup');
+const generateSeqName     = require('./util/generate-sequence-name.js');
 
 
 module.exports = (options, config, site) => {
-  let getPage;
-  const getCollection   = require(`./${site}/get-collection`);
-  const getChapter      = require(`./${site}/get-chapter`);
+  const getChapter  = require(`./${site}/get-chapter`);
+  let getPage       = getPageCommon;
+  let getCollection = getCollectionCommon;
 
+  // custom getCollection controller
+  if (config.useCustomGetCollection) {
+    getCollection = require(`./${site}/get-collection`);
+  }
+
+  // custom getPage controller
   if (config.useCustomGetPage) {
     getPage = require(`./${site}/get-page`);
-  } else {
-    getPage = getPageCommon;
   }
 
   try {
@@ -38,7 +43,7 @@ module.exports = (options, config, site) => {
     const completedChapters = [];
     
     return async () => {
-      const chapters = await getCollection(options).catch(err => {
+      const chapters = await getCollection(options, config).catch(err => {
         l.error(`@getChapter got error ${err}`);
       });
 

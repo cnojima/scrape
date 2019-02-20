@@ -33,8 +33,6 @@ if (!options.url) {
 
   options.name = options.name || Case.title(path.basename(options.url));
 
-  global.cliOptions = options;
-
   if (options.url.toLowerCase().indexOf('8muses') > -1) {
     global.config = config = require('./src/config/8muses');
     start = require('./src/8muses/start')(options, config, '8muses');
@@ -42,22 +40,22 @@ if (!options.url) {
 
 
 
-
+  // readcomicsonline
   if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
     global.config = config = require('./src/config/rco');
     start = require('./src/start')(options, config, 'rco');
   } else
-
+  // mangakakalot
   if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
     global.config = config = require('./src/config/mangakakalot');
     start = require('./src/start')(options, config, 'mangakakalot');
   } else
-
+  // mangareader
   if (options.url.toLowerCase().indexOf('mangareader') > -1) {
     global.config = config = require('./src/config/mangareader');
     start = require('./src/start')(options, config, 'mangareader');
   } else
-
+  // funmanga
   if (options.url.toLowerCase().indexOf('funmanga') > -1) {
     global.config = config = require('./src/config/funmanga');
     start = require('./src/start')(options, config, 'funmanga');

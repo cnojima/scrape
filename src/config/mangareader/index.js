@@ -1,3 +1,7 @@
+/**
+ * CONFIG FOR
+ * https://www.mangareader.net
+ */
 const config = require('../');
 
 module.exports = {
@@ -9,4 +13,6 @@ module.exports = {
 
   // img selector
   imgSelector: 'img#img',
+
+  useCustomGetCollection: true,
 };

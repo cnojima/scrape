@@ -14,6 +14,9 @@ let config = {
   // use the site-specific getPage controller
   useCustomGetPage : false,
 
+  // use the site-specific getCollection controller
+  useCustomGetCollection: false,
+
   // remove source files after CBZ creations
   nukeSource       : true,
 
@@ -35,6 +38,11 @@ let config = {
   // querySelector for <img />
   imgSelector      : '',
 
+  // collectionSelector for lists of pages
+  collectionSelector : {
+    attribute: '',
+    selector: '',
+  },
 };
 
 config = { ...config, ...dirs, ...logging };
