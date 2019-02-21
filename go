@@ -66,7 +66,7 @@ if (!options.url) {
   l.log('============================');
   l.log(`START using options:`.green);
   for (const key in options) {
-    l.info(`   ${key} : ${options[key]}`);
+    l.log(`   ${key} : ${options[key]}`);
   }
 
   history(options.url);

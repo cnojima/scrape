@@ -7,9 +7,9 @@ const config = require('../');
 module.exports = {
   ...config,
   
-  logLevel: 'DEBUG',
+  // logLevel: 'INFO',
 
-  // outDir: `/Volumes/cbr/Manga`,
+  outDir: `/Volumes/cbr/Manga`,
 
   // remove source files after CBZ creations
   nukeSource       : true,

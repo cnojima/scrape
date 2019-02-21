@@ -61,8 +61,9 @@ module.exports = (options, config, site) => {
         if (chapters.length > 0) {
           const c = chapters.shift();
 
-          if (path.basename(c).indexOf('.') < 0 || config.skipOmake === false) {
-
+          if (config.skipOmake === false ||
+            (path.basename(c).indexOf('.') < 0 && path.basename(c).indexOf('-') < 0)
+          ) {
             l.info(`working on ${c}`);
 
             const cleansedChapter = generateSeqName(c, config);

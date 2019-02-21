@@ -7,9 +7,9 @@ const config = require('../');
 module.exports = {
   ...config,
 
-  logLevel: 'DEBUG',
+  // logLevel: 'DEBUG',
 
-  // outDir: `/Volumes/cbr/Manga`,
+  outDir: `/Volumes/cbr/Manga`,
 
   // img selector
   imgSelector: 'img#img',
