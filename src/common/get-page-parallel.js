@@ -57,7 +57,7 @@ module.exports = function(
         }
       }
 
-      setTimeout(getPage_forked, 100);
+      setTimeout(getPage_forked, 250);
     } else if(pages.length === 0 && pipes === 0) {
       l.debug(` ...pausing for ${config.pauseBeforeSanity / 1000}s before performing file-count sanity check`.green);
 
@@ -75,7 +75,7 @@ module.exports = function(
       
       chapterIsDone();
     } else {
-      setTimeout(getPage_forked, 100);
+      setTimeout(getPage_forked, 250);
     }
   }
 
