@@ -57,7 +57,7 @@ module.exports = function(
         }
       }
 
-      setTimeout(getPage_forked, 100);
+      setTimeout(getPage_forked, 250);
     } else if(pages.length === 0 && pipes === 0) {
       const imgs = fs.readdirSync(imgDestDir);
       if (pageCount === imgs.length) {
@@ -69,7 +69,7 @@ module.exports = function(
         chapterIsDone();
       }
     } else {
-      setTimeout(getPage_forked, 100);
+      setTimeout(getPage_forked, 250);
     }
   }
 

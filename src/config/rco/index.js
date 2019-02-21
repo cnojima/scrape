@@ -13,7 +13,7 @@ module.exports = {
 
   outDir      : `/Volumes/cbr/Western`,
 
-  logLevel    : 'DEBUG',
+  // logLevel    : 'DEBUG',
 
   imgSelector : 'img.img-responsive.scan-page',
 
