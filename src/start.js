@@ -39,9 +39,9 @@ module.exports = (options, config, site) => {
     }
 
     mkdirp.sync(options.collectionPath);
-    
+
     const completedChapters = [];
-    
+
     return async () => {
       const chapters = await getCollection(options, config).catch(err => {
         l.error(`@getChapter got error ${err}`);
@@ -113,20 +113,19 @@ module.exports = (options, config, site) => {
             chapterIsDone();
           }
         } else {
-          l.log(`DONE with ${options.url}`);
-          
-          if (config.nukeSource) {
+          if (config.redo === false && config.nukeSource) {
             chapterCleanup(completedChapters);
           }
+
+          l.log(`DONE with ${options.url}`.green);
         }
-      } 
+      }
 
       chapterIsDone();
-    } 
+    }
   } catch (err) {
     l.error(`${config.outDir} is NOT accessible - ${err}`);
   }
-
 };
 
 

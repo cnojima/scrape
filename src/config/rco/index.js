@@ -11,6 +11,9 @@ module.exports = {
 
   throttled   : 5,
 
+  // pause before performing file-count sanity check in ms
+  pauseBeforeSanity : 10000,
+
   outDir      : `/Volumes/cbr/Western`,
 
   // logLevel    : 'DEBUG',

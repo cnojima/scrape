@@ -3,7 +3,7 @@ const path     = require('path');
 const archiver = require('archiver');
 const l        = require('./log');
 
-const createCbz = (dirPath, bookName) => {
+const createCbz = (dirPath, bookName, cb) => {
   return new Promise(async function(resolve, reject) {
     // create a file to stream archive data to.
     const output = fs.createWriteStream(bookName);
@@ -17,6 +17,10 @@ const createCbz = (dirPath, bookName) => {
     // 'close' event is fired only when a file descriptor is involved
     output.on('close', function() {
       l.log(`[ @createCbz ] ${path.basename(bookName)} finalized at ${(archive.pointer() / 1024 / 1024).toFixed(1)} Mb`.green);
+
+      if (cb) {
+        cb();
+      }
     });
      
     // good practice to catch warnings (ie stat failures and other non-blocking errors)
