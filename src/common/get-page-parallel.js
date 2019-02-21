@@ -59,15 +59,21 @@ module.exports = function(
 
       setTimeout(getPage_forked, 100);
     } else if(pages.length === 0 && pipes === 0) {
-      const imgs = fs.readdirSync(imgDestDir);
-      if (pageCount === imgs.length) {
-        await createCbz(imgDestDir, cbzDest);
-        chapterIsDone();
-      } else {
-        console.log(`page count does NOT match image count`.red, `pages ${pageCount}`.cyan, `images: ${imgs.length}`);
-        // process.exit(1);
-        chapterIsDone();
-      }
+      l.debug(` ...pausing for ${config.pauseBeforeSanity / 1000}s before performing file-count sanity check`.green);
+
+      setTimeout(() => {
+        const imgs = fs.readdirSync(imgDestDir);
+        if (pageCount === imgs.length) {
+          createCbz(imgDestDir, cbzDest);
+          // chapterIsDone();
+        } else {
+          console.log(`DIR [ ${imgDestDir} ]:`);
+          console.log(`page count does NOT match image count`.red, `pages ${pageCount}`.cyan, `images: ${imgs.length}`);
+          // chapterIsDone();
+        }
+      }, config.pauseBeforeSanity);
+      
+      chapterIsDone();
     } else {
       setTimeout(getPage_forked, 100);
     }

@@ -23,6 +23,9 @@ let config = {
   // throttled number of simultaneous requests
   throttled        : 20,
 
+  // pause before performing file-count sanity check in ms
+  pauseBeforeSanity : 5000,
+
   // request/request-promise timeout in ms
   reqTimeout       : 15000,
 
