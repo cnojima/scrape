@@ -1,10 +1,16 @@
 const path = require('path');
 
 /**
-chapter_98 => 098
-p000001.png => 001
-*/
-
+ * Generates a sequence name based on the site's configuration of `imgPadLength` - default is 3.
+ * e.g.:
+ *    chapter_98 => 098
+ *    p000001.png => 001.png
+ *
+ * @param {!string} url Full url to remote page or image asset
+ * @param {!object} config Configuration for the supported site.
+ * @param {?boolean} isImage Flag to determine if the URI is for an image resource
+ * @return {string}
+ */
 module.exports = (url, config, isImage) => {
   const padLen = (isImage) ? config.imgPadLength : config.chapterPadLength
   const ext = path.extname(url);
