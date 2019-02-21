@@ -2,11 +2,7 @@
   process.env.LOG_LEVEL = ERROR | QUIET | WARN | LOG | INFO | DEBUG
  */
 
-process.env.LOG_LEVEL = (global.config && global.config.logLevel)
-  ? global.config.logLevel
-  : (process.env.LOG_LEVEL) 
-    ? process.env.LOG_LEVEL 
-    : 'LOG';
+let currentLevel = process.env.LOG_LEVEL || 'LOG';
 
 const fs           = require('fs');
 const mkdirp       = require('mkdirp');
@@ -23,14 +19,8 @@ const levels = {
   INFO  : 5,
   DEBUG : 8
 };
-let STANDARD_LOG = require('../config/logger').STANDARD_LOG;
-let currentLevel;
 
-levelMap[ERROR_LOG]    = 0;
-levelMap[WARN_LOG]     = 2;
-levelMap[STANDARD_LOG] = 3;
-levelMap[INFO_LOG]     = 5;
-levelMap[DEBUG_LOG]    = 8;
+let STANDARD_LOG = require('../config/logger').STANDARD_LOG;
 
 
 /**
@@ -48,7 +38,7 @@ function setLogName(destFile) {
  */
 function setLogLevel(LOG_LEVEL) {
   console.log(`setting LOG_LEVEL to ${LOG_LEVEL}`.white)
-  process.env.LOG_LEVEL = LOG_LEVEL;
+  currentLevel = levels[LOG_LEVEL];
 }
 
 
