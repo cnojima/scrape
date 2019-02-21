@@ -8,6 +8,15 @@ const generateSequenceName = require('../util/generate-sequence-name');
 
 
 /**
+ * Expects a URL to a page represent one page in a volume.
+ * Using the `imgSelector` from the site configuration, a second URL is found.
+ * With the URI to the image resource itself, finally the image is downloaded
+ * and saved to the target directory.
+ *
+ * @param {!String} pageUrl Page to scrape
+ * @param {!String} imgDestDir Full path to the directory to save the image
+ * @param {!object} options Options from CLI arguments
+ * @param {!object} config Configuration for the supported site.
  * @return {Promise}
  */
 module.exports = (pageUrl, imgDestDir, options, config) => {

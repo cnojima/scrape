@@ -7,6 +7,14 @@ const config  = require('../config/mangakakalot');
 const l       = require('../util/log');
 const generateImgName = require('../util/generate-sequence-name');
 
+/**
+ * Mangakakalot image fetch as the img `src` is available from the TOC
+ *
+ * @param {!string} imgUrl URL to the image in a given page
+ * @param {!string} imgDestDir Full path to the chapter directory to save image
+ * @param {!object} options Options from CLI arguments
+ * @return {promise}
+ */
 module.exports = (imgUrl, imgDestDir, options) => {
   l.debug(`GET'ing ${imgUrl}`);
 

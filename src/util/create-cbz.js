@@ -3,6 +3,14 @@ const path     = require('path');
 const archiver = require('archiver');
 const l        = require('./log');
 
+/**
+ * Generates one CBZ volume.
+ * 
+ * @param {!string} dirPath Full path to the directory containing alphabetically ordered images as pages.
+ * @param {!string} bookName Full path to the final destination of the CBZ volume
+ * @param {?cb} cb (optional) Callback function that will be called when the CBZ operation has completed.
+ * @return {promise}
+ */
 const createCbz = (dirPath, bookName, cb) => {
   return new Promise(async function(resolve, reject) {
     // create a file to stream archive data to.
