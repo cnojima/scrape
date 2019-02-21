@@ -6,6 +6,10 @@ const cheerio              = require('cheerio');
 const l                    = require('../util/log');
 const generateSequenceName = require('../util/generate-sequence-name');
 
+
+/**
+ * @return {Promise}
+ */
 module.exports = (pageUrl, imgDestDir, options, config) => {
   // go to HTML page
   l.debug(`@getPage going to [ ${pageUrl} ] for [ ${imgDestDir} ]`.cyan)
@@ -15,7 +19,7 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
     timeout: config.reqTimeout,
     transform: body => cheerio.load(body)
   })
-    
+
     .then($ => $(config.imgSelector).attr('src'))
 
     .then(imgUrl => {
@@ -35,13 +39,14 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
         const buffer = Buffer.from(res, 'utf8');
         fs.writeFileSync(`${imgFinalName}`, buffer);
       }).catch(err => {
+        config.redo = true;
         l.error(`error in downloading img ${err}`);
         // throw `wtf: ${imgUrl}`;
       });
     })
 
     .catch(err => {
+      config.redo = true;
       l.error(err);
-      // process.exit(1);
     });
 }
