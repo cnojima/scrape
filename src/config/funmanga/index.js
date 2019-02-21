@@ -7,6 +7,8 @@ const config = require('../');
 module.exports = {
   ...config,
   
+  name: 'funmanga',
+
   // logLevel: 'INFO',
 
   outDir: `/Volumes/cbr/Manga`,

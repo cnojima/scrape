@@ -12,6 +12,5 @@ module.exports = (url, config, isImage) => {
   const finalName = (img.length > padLen) ? img.substr(img.length - padLen) : img.padStart(padLen, '0');
 
   // console.log(url.cyan, finalName.green);
-
-  return `${finalName.padStart(config.imgPadLength, '0')}${ext}`;
+  return `${finalName.padStart(config.imgPadLength, '0')}${ext}`.trim();
 };

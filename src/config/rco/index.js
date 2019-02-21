@@ -7,11 +7,15 @@ const config = require('../');
 module.exports = {
   ...config,
 
-  outDir: `/Volumes/cbr/Western`,
+  name        : 'rco',
 
-  // logLevel: 'DEBUG',
+  throttled   : 5,
 
-  imgSelector: 'img.img-responsive.scan-page',
+  outDir      : `/Volumes/cbr/Western`,
+
+  logLevel    : 'DEBUG',
+
+  imgSelector : 'img.img-responsive.scan-page',
 
   // collectionSelector for lists of pages
   collectionSelector : {

@@ -45,6 +45,10 @@ if (!options.url) {
     global.config = config = require('./src/config/rco');
     start = require('./src/start')(options, config, 'rco');
   } else
+
+
+
+
   // mangakakalot
   if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
     global.config = config = require('./src/config/mangakakalot');
