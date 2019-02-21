@@ -35,7 +35,7 @@ module.exports = function(
 
         for(const ext in guesses) {
           imgGuess = `${imgDestDir}/${guesses[ext]}`;
-          
+
           if (fs.existsSync(imgGuess)) {
             imageExists = true;
             break;
@@ -64,16 +64,14 @@ module.exports = function(
       setTimeout(() => {
         const imgs = fs.readdirSync(imgDestDir);
         if (pageCount === imgs.length) {
-          createCbz(imgDestDir, cbzDest);
-          // chapterIsDone();
+          createCbz(imgDestDir, cbzDest, chapterIsDone);
         } else {
           console.log(`DIR [ ${imgDestDir} ]:`);
           console.log(`page count does NOT match image count`.red, `pages ${pageCount}`.cyan, `images: ${imgs.length}`);
-          // chapterIsDone();
+          config.redo = true;
+          chapterIsDone();
         }
       }, config.pauseBeforeSanity);
-      
-      chapterIsDone();
     } else {
       setTimeout(getPage_forked, 250);
     }
