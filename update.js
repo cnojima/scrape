@@ -24,23 +24,23 @@ const go = async () => {
     if (url.toLowerCase().indexOf('8muses') > -1) {
       options.url = url;
       config = require('./src/config/8muses');
-      await require('./src/8muses/start')(options, config, '8muses');
+      await require('./src/8muses/start')(options, config, '8muses')();
     } else if (url.toLowerCase().indexOf('readcomicsonline') > -1) {
       options.url = url;
       config = require('./src/config/rco');
-      await require('./src/start')(options, config, 'rco');
+      await require('./src/start')(options, config, 'rco')();
     } else if (url.toLowerCase().indexOf('mangakakalot') > -1) {
       options.url = url;
       config = require('./src/config/mangakakalot');
-      await require('./src/start')(options, config, 'mangakakalot');
+      await require('./src/start')(options, config, 'mangakakalot')();
     } else if (url.toLowerCase().indexOf('mangareader') > -1) {
       options.url = url;
       config = require('./src/config/mangareader');
-      await require('./src/start')(options, config, 'mangareader');
+      await require('./src/start')(options, config, 'mangareader')();
     } else if (url.toLowerCase().indexOf('funmanga') > -1) {
       options.url = url;
       config = require('./src/config/funmanga');
-      await require('./src/start')(options, config, 'funmanga');
+      await require('./src/start')(options, config, 'funmanga')();
     }
   } else {
     console.log(`DONE`.green);
