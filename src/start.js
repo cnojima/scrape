@@ -12,7 +12,7 @@ const chapterCleanup      = require('./util/chapter-cleanup');
 const generateSeqName     = require('./util/generate-sequence-name.js');
 
 
-module.exports = (options, config, site) => {
+module.exports = (options, config, site, callback) => {
   const getChapter  = require(`./${site}/get-chapter`);
   let getPage       = getPageCommon;
   let getCollection = getCollectionCommon;
@@ -118,6 +118,10 @@ module.exports = (options, config, site) => {
           }
 
           l.log(`DONE with ${options.url}`.green);
+
+          if (callback) {
+            callback();
+          }
         }
       }
 
