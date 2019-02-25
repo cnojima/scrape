@@ -61,7 +61,8 @@ if (!options.url) {
     start = require('./src/start')(options, config, 'funmanga');
   }
 
-  l.setLogLevel(process.env.LOG_LEVEL || config.logLevel);
+  config.logLevel = (process.env.LOG_LEVEL || config.logLevel);
+  l.setLogLevel(config.logLevel);
   l.setLogName(`${config.logDir}/${Case.snake(options.name)}.log`);
   l.log('============================');
   l.log(`START using options:`.green);
@@ -69,7 +70,7 @@ if (!options.url) {
     l.log(`   ${key} : ${options[key]}`);
   }
 
-  history(options.url);
+  history(options, config);
 
   (async () => await start())();
 }
