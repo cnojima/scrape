@@ -12,7 +12,7 @@ const history            = require('../util/history');
 const l                  = require('../util/log');
 const chapterCleanup     = require('../util/chapter-cleanup');
 
-const config             = require('../config/8muses');
+// const config             = require('../config/8muses');
 const cookies            = require('../config/8muses/cookies');
 const pupOptions         = require('../config/8muses/puppeteer');
 
@@ -20,7 +20,7 @@ const pupOptions         = require('../config/8muses/puppeteer');
 /**
  * @return {Function}
  */
-module.exports = options => {
+module.exports = (options, config, site, callback) => {
 
   const headers  = require('../config/8muses/headers')(options.url);
   const destPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
@@ -49,9 +49,14 @@ module.exports = options => {
       }
 
       await browser.close();
-      dump(global.errors);
 
       chapterCleanup(global.completedVolumes);
+
+      l.log(`DONE with ${options.url}`.green);
+
+      if (callback) {
+        callback();
+      }
     };
   } catch (err) {
     l.error(`${config.outDir} is NOT accessible - ${err}`);
