@@ -23,5 +23,13 @@ module.exports = (options, config) => {
     config
   };
 
-  fs.writeFileSync(historyFile, JSON.stringify(history, null, 2), 'utf8');
+  const newHistory = {};
+  const urls = Object.keys(history);
+  urls.sort();
+
+  urls.forEach(url => {
+    newHistory[url] = history[url];
+  });
+
+  fs.writeFileSync(historyFile, JSON.stringify(newHistory, null, 2), 'utf8');
 }
