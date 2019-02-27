@@ -10,6 +10,7 @@ global = {
 
 require('./src/util/init');
 const path      = require('path');
+const merge     = require('deepmerge');
 const Case      = require('case');
 const cli       = require('command-line-args');
 const cliConfig = require('./src/config/cli-base');
@@ -28,9 +29,9 @@ if (!isEmpty(history)) {
 const go = () => {
   if (urls.length > 0) {
     const url = urls.shift();
-    const { options, config } = history[url];
+    let { options, config } = history[url];
 
-    if (options.url.toLowerCase().indexOf('8muses') > -1) {
+    if (options['is-complete'] || options.url.toLowerCase().indexOf('8muses') > -1) {
       go();
     } else {
       let start = () => {
@@ -42,16 +43,21 @@ const go = () => {
 
       // readcomiconline.to
       if (options.url.toLowerCase().indexOf('readcomiconline.to') > -1) {
+        config = merge(require('./src/config/rco-to'), config);
         start = require('./src/rco-to/start')(options, config, 'rco-to', go);
       } else
 
       if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
+        config = merge(require('./src/config/rco'), config);
         start = require('./src/start')(options, config, 'rco', go);
       } else if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
+        config = merge(require('./src/config/mangakakalot'), config);
         start = require('./src/start')(options, config, 'mangakakalot', go);
       } else if (options.url.toLowerCase().indexOf('mangareader') > -1) {
+        config = merge(require('./src/config/mangareader'), config);
         start = require('./src/start')(options, config, 'mangareader', go);
       } else if (options.url.toLowerCase().indexOf('funmanga') > -1) {
+        config = merge(require('./src/config/funmanga'), config);
         start = require('./src/start')(options, config, 'funmanga', go);
       }
 
