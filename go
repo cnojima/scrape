@@ -41,7 +41,12 @@ if (!options.url) {
 
 
 
-  // readcomicsonline
+  // readcomiconline.to
+  if (options.url.toLowerCase().indexOf('readcomiconline.to') > -1) {
+    config = require('./src/config/rco-to');
+    start = require('./src/start')(options, config, 'rco-to');
+  } else
+  // readcomicsonline.ru
   if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
     config = require('./src/config/rco');
     start = require('./src/start')(options, config, 'rco');
