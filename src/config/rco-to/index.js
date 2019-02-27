@@ -1,6 +1,6 @@
 /**
  * CONFIG FOR
- * https://readcomicsonline.ru
+ * https://readcomiconline.to
  */
 const config = require('../');
 
@@ -18,7 +18,7 @@ module.exports = {
 
   // logLevel    : 'DEBUG',
 
-  imgSelector : '#imgCurrent',
+  imgSelector : '#containerRoot p img',
 
   // collectionSelector for lists of pages
   collectionSelector : {

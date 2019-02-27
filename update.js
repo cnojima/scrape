@@ -40,6 +40,11 @@ const go = () => {
 
       options.name = options.name || Case.title(path.basename(options.url));
 
+      // readcomiconline.to
+      if (options.url.toLowerCase().indexOf('readcomiconline.to') > -1) {
+        start = require('./src/rco-to/start')(options, config, 'rco-to', go);
+      } else
+
       if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
         start = require('./src/start')(options, config, 'rco', go);
       } else if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
