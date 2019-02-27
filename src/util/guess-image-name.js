@@ -10,9 +10,6 @@ const generateSeqName = require('./generate-sequence-name');
  */
 module.exports = (pageUrl, config) => {
   const guess = generateSeqName(pageUrl, config, true, false);
-  // const pageNum = path.basename(pageUrl);
-  // const guess = pageNum.padStart(config.imgPadLength, '0');
-  // console.log(pageUrl.cyan, guess.green);
 
   return {
     jpg: `${guess}.jpg`,
