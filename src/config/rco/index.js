@@ -18,6 +18,8 @@ module.exports = {
 
   // logLevel    : 'DEBUG',
 
+  completedSelector: 'span.label-danger',
+
   imgSelector : 'img.img-responsive.scan-page',
 
   // collectionSelector for lists of pages
