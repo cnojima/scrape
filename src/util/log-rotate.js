@@ -1,19 +1,18 @@
 const fs            = require('fs');
 const path          = require('path');
-const config        = require('../config');
-const logConfig     = require('../config/logger');
 const log           = require('./log');
 const zip           = require('./zip');
 
 
 
 /**
- * rotates current log archives to max of logConfig.keepLogs
+ * rotates current log archives to max of config.keepLogs
  * @param {!string} basename
  * @param {!array} logDirFiles Reverse sorted snapshot array of current files in logDir
- * @param {!object} keepLogs
+ * @param {!object} config
  */
-function rotateArchives(basename, logDirFiles, keepLogs) {
+function rotateArchives(basename, logDirFiles, config) {
+  const { keepLogs, logDir } = config;
   let archiveIndex = 1;
   const re = new RegExp(`${basename}\.([0-5]{1})`);
 
@@ -27,11 +26,11 @@ function rotateArchives(basename, logDirFiles, keepLogs) {
   }
 
   while (archiveIndex >= 0) {
-    if (fs.existsSync(path.resolve(config.logDir, `${basename}.${archiveIndex}.zip`))) {
+    if (fs.existsSync(path.resolve(logDir, `${basename}.${archiveIndex}.zip`))) {
       if (archiveIndex + 1 > keepLogs) {
-        fs.unlinkSync(path.resolve(config.logDir, `${basename}.${archiveIndex}.zip`));
+        fs.unlinkSync(path.resolve(logDir, `${basename}.${archiveIndex}.zip`));
       } else {
-        fs.renameSync(path.resolve(config.logDir, `${basename}.${archiveIndex}.zip`), path.resolve(config.logDir, `${basename}.${(archiveIndex + 1)}.zip`));
+        fs.renameSync(path.resolve(logDir, `${basename}.${archiveIndex}.zip`), path.resolve(logDir, `${basename}.${(archiveIndex + 1)}.zip`));
       }
     }
 
@@ -39,7 +38,7 @@ function rotateArchives(basename, logDirFiles, keepLogs) {
   }
 }
 
-module.exports = function(done) {
+module.exports = function(config, done) {
   log.info('Rotating logs (if necessary)');
   if (fs.existsSync(config.logDir)) {
     const logFiles = [];
@@ -55,7 +54,7 @@ module.exports = function(done) {
 
     logFiles.forEach(function(file) {
       // > maxSize?
-      const overSize = (parseInt(fs.statSync(`${config.logDir}/${file}`).size, 10) / (1024 * 1000) > logConfig.maxSize);
+      const overSize = (parseInt(fs.statSync(`${config.logDir}/${file}`).size, 10) / (1024 * 1000) > config.maxSize);
 
       if (overSize) {
         log.info(`Rotating ${file}`);
@@ -63,7 +62,7 @@ module.exports = function(done) {
         const archivePrefix = path.basename(file, '.log');
 
         // rotate existing archives
-        rotateArchives(archivePrefix, logDirFiles, logConfig.keepLogs);
+        rotateArchives(archivePrefix, logDirFiles, config);
 
         const rotateName = `${archivePrefix}.0`;
         const rename = `${rotateName}.log`;
@@ -71,13 +70,13 @@ module.exports = function(done) {
         fs.renameSync(`${config.logDir}/${file}`, rename);
 
         log.debug(`zipping ${config.logDir}/${rotateName}.zip`);
-            
+
         zip({
           prefix: config.logDir,
           target: `${config.logDir}/${rotateName}.zip`,
           source: rename
         }, function() {
-          fs.unlinkSync(rename, function(err) {
+          fs.unlink(rename, function(err) {
             if (err) {
               log.error(err);
             }

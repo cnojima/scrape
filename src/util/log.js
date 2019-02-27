@@ -108,8 +108,7 @@ function writeLog(log, s) {
     mkdirp.sync(dir);
   }
 
-  //fs.appendFileSync(log, s);
-  fs.appendFile(log, s, () => null);
+  fs.appendFile(log, s.strip, () => null);
 }
 
 /**

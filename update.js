@@ -14,6 +14,7 @@ const Case      = require('case');
 const cli       = require('command-line-args');
 const cliConfig = require('./src/config/cli-base');
 const l         = require('./src/util/log');
+const logRot    = require('./src/util/log-rotate');
 const isEmpty   = require('./src/util/is-object-empty');
 const history   = require('./out/history.json');
 const options   = cli(cliConfig);
@@ -24,7 +25,7 @@ if (!isEmpty(history)) {
   urls = Object.keys(history);
 }
 
-const go = async () => {
+const go = () => {
   if (urls.length > 0) {
     const url = urls.shift();
     const { options, config } = history[url];
@@ -52,13 +53,15 @@ const go = async () => {
       l.setLogLevel(process.env.LOG_LEVEL || config.logLevel);
       l.setLogName(`${config.logDir}/${Case.snake(options.name)}.log`);
 
-      l.log('============================');
-      l.log(`UPDATING using options:`);
-      for (const key in options) {
-        l.log(`   ${key} : ${options[key]}`);
-      }
+      logRot(config, () => {
+        l.log('\n============================');
+        l.log(`UPDATING using options:`);
+        for (const key in options) {
+          l.log(`   ${key} : ${options[key]}`);
+        }
 
-      await start();
+        (async () => await start())();
+      });
     }
   } else {
     console.log(`DONE`.green);
