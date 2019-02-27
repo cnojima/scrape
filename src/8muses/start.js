@@ -12,9 +12,8 @@ const history            = require('../util/history');
 const l                  = require('../util/log');
 const chapterCleanup     = require('../util/chapter-cleanup');
 
-// const config             = require('../config/8muses');
+const pupOptions         = require('../config/puppeteer');
 const cookies            = require('../config/8muses/cookies');
-const pupOptions         = require('../config/8muses/puppeteer');
 
 
 /**
@@ -22,7 +21,7 @@ const pupOptions         = require('../config/8muses/puppeteer');
  */
 module.exports = (options, config, site, callback) => {
 
-  const headers  = require('../config/8muses/headers')(options.url);
+  const headers  = require(`../config/${site}/headers`)(options.url);
   const destPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
 
   try {
