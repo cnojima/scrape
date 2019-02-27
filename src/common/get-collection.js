@@ -1,5 +1,6 @@
 const req     = require('request-promise');
 const cheerio = require('cheerio');
+const history = require('../util/history');
 const l       = require('../util/log');
 
 
@@ -18,6 +19,12 @@ module.exports = (options, config) => {
   }).then($ => {
     const ret = [];
     const { selector, attribute } = config.collectionSelector;
+
+    // check for completion
+    if (config.completedSelector && $(config.completedSelector).text().toLowerCase().indexOf('complete') > -1) {
+      options['is-complete'] = true;
+      history(options, config);
+    }
 
     $(selector).each((i, a) => {
       const url = $(a).attr(attribute);

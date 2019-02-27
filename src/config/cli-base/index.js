@@ -13,6 +13,12 @@ module.exports = [
     name: 'is-collection',
     type: Boolean,
   }, {
+    alias: 'C',
+    defaultValue: false,
+    description: 'Set this flag to prevent `update` from operating on this series.',
+    name: 'is-complete',
+    type: Boolean,
+  }, {
     alias: 'n',
     description: 'Explicitly set series name.',
     name: 'name',

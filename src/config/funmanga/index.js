@@ -1,12 +1,12 @@
 /**
  * CONFIG FOR
- * https://www.funmanga.com 
+ * https://www.funmanga.com
  */
 const config = require('../');
 
 module.exports = {
   ...config,
-  
+
   name: 'funmanga',
 
   // logLevel: 'INFO',
@@ -18,6 +18,9 @@ module.exports = {
 
   // padding length in chapter names
   chapterPadLength : 4,
+
+  // completedSelector
+  completedSelector: 'dl dd:nth-child(4)',
 
   // img selector
   imgSelector: 'img#chapter_img.img-responsive',

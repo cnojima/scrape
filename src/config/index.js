@@ -40,6 +40,9 @@ let config = {
   // padding length in image names
   imgPadLength     : 3,
 
+  // querySelector for the completed flag
+  completedSelector: '',
+
   // querySelector for <img />
   imgSelector      : '',
 
