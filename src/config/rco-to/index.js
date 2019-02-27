@@ -1,13 +1,13 @@
 /**
  * CONFIG FOR
- * https://readcomicsonline.ru
+ * https://readcomiconline.to
  */
 const config = require('../');
 
 module.exports = {
   ...config,
 
-  name        : 'rco',
+  name        : 'rco-to',
 
   throttled   : 5,
 
@@ -18,11 +18,11 @@ module.exports = {
 
   // logLevel    : 'DEBUG',
 
-  imgSelector : 'img.img-responsive.scan-page',
+  imgSelector : '#containerRoot p img',
 
   // collectionSelector for lists of pages
   collectionSelector : {
     attribute: 'href',
-    selector: 'ul.chapters li a',
+    selector: 'div.episodeList .listing a',
   },
 };

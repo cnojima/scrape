@@ -8,6 +8,8 @@ const log    = require('./log');
 
 
 /**
+ * Unzips an archive to the destination directory.
+ *
  * @param {!string} file Absolute path to zip file
  * @param {!string} dest Absolute path to dest folder for unzip
  * @param {?boolean} fresh If true, will rimraf if dest folder exists

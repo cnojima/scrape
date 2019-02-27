@@ -7,10 +7,11 @@ const config = require('../');
 module.exports = {
   ...config,
 
-  logLevel: 'DEBUG',
+  name: 'mangakakalot',
 
-  // outDir: `/Volumes/cbr/Manga`,
-  outDir: `${process.cwd()}/out`,
+  // logLevel: 'DEBUG',
+
+  outDir: `/Volumes/cbr/Manga`,
 
   // img selector
   imgSelector: 'div#vungdoc img',

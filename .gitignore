@@ -60,5 +60,8 @@ typings/
 # next.js build output
 .next
 
+# files
+.DS_Store
+
 # dirs
 out

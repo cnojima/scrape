@@ -12,7 +12,7 @@ const chapterCleanup      = require('./util/chapter-cleanup');
 const generateSeqName     = require('./util/generate-sequence-name.js');
 
 
-module.exports = (options, config, site) => {
+module.exports = (options, config, site, callback) => {
   const getChapter  = require(`./${site}/get-chapter`);
   let getPage       = getPageCommon;
   let getCollection = getCollectionCommon;
@@ -39,9 +39,9 @@ module.exports = (options, config, site) => {
     }
 
     mkdirp.sync(options.collectionPath);
-    
+
     const completedChapters = [];
-    
+
     return async () => {
       const chapters = await getCollection(options, config).catch(err => {
         l.error(`@getChapter got error ${err}`);
@@ -61,8 +61,9 @@ module.exports = (options, config, site) => {
         if (chapters.length > 0) {
           const c = chapters.shift();
 
-          if (path.basename(c).indexOf('.') < 0 || config.skipOmake === false) {
-
+          if (config.skipOmake === false ||
+            (path.basename(c).indexOf('.') < 0 && path.basename(c).indexOf('-') < 0)
+          ) {
             l.info(`working on ${c}`);
 
             const cleansedChapter = generateSeqName(c, config);
@@ -112,20 +113,23 @@ module.exports = (options, config, site) => {
             chapterIsDone();
           }
         } else {
-          l.log(`DONE with ${options.url}`);
-          
-          if (config.nukeSource) {
+          if (config.redo === false && config.nukeSource) {
             chapterCleanup(completedChapters);
           }
+
+          l.log(`DONE with ${options.url}`.green);
+
+          if (callback) {
+            callback();
+          }
         }
-      } 
+      }
 
       chapterIsDone();
-    } 
+    }
   } catch (err) {
     l.error(`${config.outDir} is NOT accessible - ${err}`);
   }
-
 };
 
 

@@ -4,24 +4,21 @@ const mkdirp             = require('mkdirp');
 const puppeteer          = require('puppeteer');
 const Case               = require('case');
 
-const getBook            = require('./books').getBook;
-const getBooks           = require('./books').getBooks;
-const handleErroredBooks = require('./books').handleErroredBooks;
 const dump               = require('../util/dump');
 const history            = require('../util/history');
 const l                  = require('../util/log');
 const chapterCleanup     = require('../util/chapter-cleanup');
 
+const getCollection      = require('./get-collection');
 const pupOptions         = require('../config/puppeteer');
-const cookies            = require('../config/8muses/cookies');
+const cookies            = require('../config/rco-to/cookies');
 
 
 /**
  * @return {Function}
  */
 module.exports = (options, config, site, callback) => {
-
-  const headers  = require(`../config/${site}/headers`)(options.url);
+  const headers  = require(`../config/${site}/headers`);
   const destPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
 
   try {
@@ -31,25 +28,24 @@ module.exports = (options, config, site, callback) => {
       // make sure target dir exists
       mkdirp.sync(destPath);
 
+      config.destPath = destPath;
+
       const browser = await puppeteer.launch(pupOptions);
       const page = await browser.newPage();
 
-      await page.setCookie({ name: "checked", value: "1", url: "https://www.8muses.com" });
+      for (let i=0, n=cookies.length; i<n; i++) {
+        await page.setCookie(cookies[i]);
+      }
       await page.setExtraHTTPHeaders(headers);
 
-      if (options["is-collection"]) {
-        await getBooks(options, page, destPath);
-      } else {
-        await getBook(options, page, destPath);
-      }
-
-      if (global.errors.length > 0) {
-        await handleErroredBooks(page, destPath);
-      }
+      const toNuke = await getCollection(page, options, config);
 
       await browser.close();
 
-      chapterCleanup(global.completedVolumes);
+      if (config.nukeSource) {
+        l.log(`Nuking ${toNuke.length} source file directories`);
+        chapterCleanup(toNuke);
+      }
 
       l.log(`DONE with ${options.url}`.green);
 

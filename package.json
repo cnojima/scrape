@@ -2,7 +2,10 @@
   "name": "8muses",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "go",
+  "engines": {
+    "node": ">=10.12"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

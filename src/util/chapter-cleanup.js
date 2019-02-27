@@ -1,15 +1,17 @@
 const rimraf = require('rimraf');
 const l      = require('./log');
 
+/**
+ * Final operation in `./go` process.
+ * After CBZs are generated and moved to the final location, remove temporary/raw image assets
+ *
+ * @param {!array} completedChapters Array of full paths to chapter directories.
+ */
 module.exports = completedChapters => {
-  l.log(`@chapterCleanup - pausing for a momemnt to allow CBZ process to complete`);
-  
-  setTimeout(() => {
-    completedChapters.forEach(toDel => {
-      l.info(`rmdir ${toDel}`);
-      rimraf(toDel, () => {
-        l.debug(`nuked ${toDel}`);
-      });
+  completedChapters.forEach(toDel => {
+    l.info(`rmdir ${toDel}`);
+    rimraf(toDel, () => {
+      l.debug(`nuked ${toDel}`);
     });
-  }, 13000);
+  });
 };

@@ -3,6 +3,14 @@ const cheerio = require('cheerio');
 const l       = require('../util/log');
 
 
+/**
+ * Retrieves a list of chapters, issues, volumes from a site given a query selector
+ * If the operation fails, the `config.redo` flag will be set to true and execution will continue.
+ *
+ * @param {!object} options Options from CLI arguments
+ * @param {!object} config Configuration for the supported site.
+ * @return {Promise}
+ */
 module.exports = (options, config) => {
   return req({
     url: options.url,
@@ -21,7 +29,7 @@ module.exports = (options, config) => {
 
     return ret;
   }).catch(err => {
+    config.redo = true;
     l.error(err);
-    process.exit(1);
   });
 }

@@ -6,7 +6,7 @@ const l       = require('../util/log');
 
 module.exports = (pageUrl, imgDest, options) => {
   // go to HTML page
-  l.debug(`@getPage going to [ ${pageUrl} ] for [ ${imgDestDir} ]`.cyan)
+  l.debug(`@getPage going to [ ${pageUrl} ] for [ ${imgDest} ]`.cyan)
 
   return req({
     url: pageUrl,

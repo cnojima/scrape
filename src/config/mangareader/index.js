@@ -7,12 +7,14 @@ const config = require('../');
 module.exports = {
   ...config,
 
-  logLevel: 'DEBUG',
+  name: 'mangareader',
 
-  // outDir: `/Volumes/cbr/Manga`,
+  // logLevel: 'DEBUG',
+
+  outDir: `/Volumes/cbr/Manga`,
 
   // img selector
   imgSelector: 'img#img',
 
-  useCustomGetCollection: true,
+  // useCustomGetCollection: true,
 };

@@ -1,10 +1,12 @@
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "1";
 
 const path    = require('path');
 const dirs    = require('./directories');
 const logging = require('./logger');
 
 let config = {
+  // redo flag
+  redo : false,
   // EXTRA debug logging, slow as hell.
   debugMode        : false,
 
@@ -22,6 +24,9 @@ let config = {
 
   // throttled number of simultaneous requests
   throttled        : 20,
+
+  // pause before performing file-count sanity check in ms
+  pauseBeforeSanity : 1000,
 
   // request/request-promise timeout in ms
   reqTimeout       : 15000,
