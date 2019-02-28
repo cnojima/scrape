@@ -16,9 +16,15 @@ const generateSequenceName = require('./src/util/generate-sequence-name');
 
 
 const config = require('./src/config/rco-to');
-
-const foo = generateSequenceName('https://2.bp.blogspot.com/-cLmxnTqDD_8/WguaAzb2EvI/AAAAAAAABBc/HkgGSeOvHEMKippF3H-T1DwpBlhwV6Z1wCHMYCw/s0/RCO008_w.jpg', config, true);
+// const url = ''https://2.bp.blogspot.com/-cLmxnTqDD_8/WguaAzb2EvI/AAAAAAAABBc/HkgGSeOvHEMKippF3H-T1DwpBlhwV6Z1wCHMYCw/s0/RCO008_w.jpg';
+const s = 'https://2.bp.blogspot.com/ire5GUyLquyR6bmT7Bw9oQDC2LpYU3mXA4AfrLxmbv5tC8So084dHcfHP2_KXDBfrPLYOWkkp3q7=s0';
+const foo = generateSequenceName(s, config, true);
+console.log(path.extname(s));
+console.log(path.extname('foo.jpg'));
+console.log(path.basename('0'))
 console.log(foo);
+
+console.log(path.basename('image/jpeg'));
 
 // const test = `https://readcomiconline.to/Comic/Sandman-Presents-Petrefax/Issue-1?id=125109`
 // const myURL = new URL(test);

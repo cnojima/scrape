@@ -18,6 +18,8 @@ module.exports = {
 
   // logLevel    : 'DEBUG',
 
+  completedSelector: '#leftside .barContent p',
+
   imgSelector : '#containerRoot p img',
 
   // collectionSelector for lists of pages

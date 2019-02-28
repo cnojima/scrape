@@ -13,6 +13,7 @@ module.exports = (pageUrl, config) => {
 
   return {
     jpg: `${guess}.jpg`,
+    jpeg: `${guess}.jpeg`,
     png: `${guess}.png`,
     webp: `${guess}.webp`,
     gif: `${guess}.gif`,
