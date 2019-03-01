@@ -36,7 +36,7 @@ const go = () => {
     } else {
       let start = () => {
         console.log(`\n\n\n[ ${options.url} ] is not supported`.yellow);
-        console.log(usage);
+        go();
       }
 
       options.name = options.name || Case.title(path.basename(options.url));

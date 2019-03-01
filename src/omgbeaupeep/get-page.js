@@ -20,6 +20,8 @@ const generateSequenceName = require('../util/generate-sequence-name');
  * @return {Promise}
  */
 module.exports = (pageUrl, imgDestDir, options, config) => {
+  pageUrl = `${options.url}/${path.basename(imgDestDir)}/${pageUrl}`;
+
   // go to HTML page
   l.debug(`@getPage going to [ ${pageUrl} ] for [ ${imgDestDir} ]`.cyan);
 
@@ -32,6 +34,7 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
     .then($ => $(config.imgSelector).attr('src'))
 
     .then(imgUrl => {
+      imgUrl = `${path.dirname(options.url)}/${imgUrl.replace(/\ /g, '%20')}`;
       const ext = path.extname(imgUrl);
       const genName = generateSequenceName(`${pageUrl}${ext}`, config);
       const imgFinalName = `${imgDestDir}/${genName}`;
@@ -58,4 +61,4 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
       config.redo = true;
       l.error(err);
     });
-}
+};

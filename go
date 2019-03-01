@@ -68,6 +68,11 @@ if (!options.url) {
   if (options.url.toLowerCase().indexOf('funmanga') > -1) {
     config = require('./src/config/funmanga');
     start = require('./src/start')(options, config, 'funmanga');
+  } else
+  // omgbeaupeep
+  if (options.url.toLowerCase().indexOf('omgbeaupeep') > -1) {
+    config = require('./src/config/omgbeaupeep');
+    start = require('./src/start')(options, config, 'omgbeaupeep');
   }
 
   config.logLevel = (process.env.LOG_LEVEL || config.logLevel);
