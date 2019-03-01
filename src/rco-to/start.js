@@ -38,20 +38,20 @@ module.exports = (options, config, site, callback) => {
       }
       await page.setExtraHTTPHeaders(headers);
 
-      const toNuke = await getCollection(page, options, config);
+      getCollection(page, options, config).then((toNuke) => {
+        browser.close();
 
-      await browser.close();
+        if (config.nukeSource) {
+          l.log(`Nuking ${toNuke.length} source file directories`);
+          chapterCleanup(toNuke);
+        }
 
-      if (config.nukeSource) {
-        l.log(`Nuking ${toNuke.length} source file directories`);
-        chapterCleanup(toNuke);
-      }
+        l.log(`DONE with ${options.url}`.green);
 
-      l.log(`DONE with ${options.url}`.green);
-
-      if (callback) {
-        callback();
-      }
+        if (callback) {
+          callback();
+        }
+      });
     };
   } catch (err) {
     l.error(`${config.outDir} is NOT accessible - ${err}`);
