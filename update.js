@@ -47,7 +47,10 @@ const go = () => {
         start = require('./src/rco-to/start')(options, config, 'rco-to', go);
       } else
 
-      if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
+      if (options.url.toLowerCase().indexOf('omgbeaupeep') > -1) {
+        config = merge(require('./src/config/omgbeaupeep'), config);
+        start = require('./src/start')(options, config, 'omgbeaupeep', go);
+      } else if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
         config = merge(require('./src/config/rco'), config);
         start = require('./src/start')(options, config, 'rco', go);
       } else if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
