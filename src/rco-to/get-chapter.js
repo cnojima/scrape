@@ -1,7 +1,5 @@
 const fs                   = require('fs');
 const path                 = require('path');
-const urln                 = require('url');
-const mkdirp               = require('mkdirp');
 
 const createCbz            = require('../util/create-cbz');
 const generateSequenceName = require('../util/generate-sequence-name');
@@ -11,7 +9,7 @@ const dump                 = require('../util/dump');
 const dp                   = require('../util/dump-puppeteer');
 
 
-module.exports = async (options, config, browser, page, url, toNuke, isDone) => {
+module.exports = async (options, config, browser, page, url, bookPath, cbzDest, isDone) => {
   // find all responses with contentType image/*
   const responses = {};
   let images = [];
@@ -109,50 +107,20 @@ module.exports = async (options, config, browser, page, url, toNuke, isDone) => 
 
 
 
+  page.on('response', handleResponse);
+  page.on('load', handleLoad);
 
 
-  const Url = new URL(url);
-  const book = generateSequenceName(
-    path.basename(
-      urln.format(
-        Url, { fragment: false, unicode: true, auth: false, search: false }
-      )
-    ).replace('Issue-', ''),
-    config,
-    false,
-    false
-  );
-  const bookPath = `${config.destPath}/${book}`;
-  const cbzDest = `${config.destPath}/${path.basename(config.destPath)}-${book}.cbz`;
-
-  l.log(`going to book [ ${url} ]`);
-
-  mkdirp.sync(bookPath);
-  toNuke.push(bookPath);
-
-  if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
-    // find all responses with contentType image/*
-    const responses = {};
-    let images = [];
-
-    page.on('response', handleResponse);
-    page.on('load', handleLoad);
-
-
-    await page.goto(url).catch(err => {
-      l.error(`going to [${url}] failed with ${err}`);
-      process.exit();
-    });
-    // we'll allow 15s for error
-    await page.waitForNavigation({
-      timeout: 30000,
-      // waitUntil: 'networkidle0'
-    }).catch(err => {
-      // do nothing - we don't care
-      // console.log(err);
-    });
-  } else {
-    l.info(`.${cbzDest.replace(__dirname, '')} exists - skipping chapter`);
-    isDone();
-  }
+  await page.goto(url).catch(err => {
+    l.error(`going to [${url}] failed with ${err}`);
+    process.exit();
+  });
+  // we'll allow 15s for error
+  await page.waitForNavigation({
+    timeout: 30000,
+    // waitUntil: 'networkidle0'
+  }).catch(err => {
+    // do nothing - we don't care
+    // console.log(err);
+  });
 };

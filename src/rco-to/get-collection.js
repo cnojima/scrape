@@ -1,5 +1,11 @@
+const fs                   = require('fs');
+const path                 = require('path');
+const urln                 = require('url');
+const mkdirp               = require('mkdirp');
+
 const l                    = require('../util/log');
 const history              = require('../util/history');
+const generateSequenceName = require('../util/generate-sequence-name');
 const getChapter           = require('./get-chapter');
 
 const getCollection = (browser, page, options, config) => {
@@ -13,7 +19,31 @@ const getCollection = (browser, page, options, config) => {
       } else {
         l.debug(`@getCollection - ${books.length} books to process`.cyan);
         const url = books.pop();
-        getChapter(options, config, browser, page, url, toNuke, isDone);
+        const Url = new URL(url);
+        const book = generateSequenceName(
+          path.basename(
+            urln.format(
+              Url, { fragment: false, unicode: true, auth: false, search: false }
+            )
+          ).replace('Issue-', ''),
+          config,
+          false,
+          false
+        );
+        const bookPath = `${config.destPath}/${book}`;
+        const cbzDest = `${config.destPath}/${path.basename(config.destPath)}-${book}.cbz`;
+
+        l.log(`going to book [ ${url} ]`);
+
+        mkdirp.sync(bookPath);
+        toNuke.push(bookPath);
+
+        if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
+          getChapter(options, config, browser, page, url, bookPath, cbzDest, isDone);
+        } else {
+          l.info(`.${cbzDest.replace(__dirname, '')} exists - skipping chapter`);
+          isDone();
+        }
       }
     }
 
