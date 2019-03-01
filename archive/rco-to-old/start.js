@@ -38,8 +38,7 @@ module.exports = (options, config, site, callback) => {
       }
       await page.setExtraHTTPHeaders(headers);
 
-      getCollection(browser, page, options, config).then((toNuke) => {
-      // getCollection(page, options, config).then((toNuke) => {
+      getCollection(page, options, config).then((toNuke) => {
         browser.close();
 
         if (config.nukeSource) {

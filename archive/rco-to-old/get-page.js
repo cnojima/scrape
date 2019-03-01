@@ -5,8 +5,8 @@ const cheerio              = require('cheerio');
 
 const l                    = require('../util/log');
 
-module.exports = (imgUrl, pageNumber, imgDestDir, options, config) => {
-  const imgFinalName = `${imgDestDir}/${pageNumber}`;
+module.exports = (imgUrl, pageNumber, bookPath, options, config) => {
+  const imgFinalName = `${bookPath}/${pageNumber}`;
 
   return req.get({
     method: 'GET',
