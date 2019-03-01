@@ -13,7 +13,6 @@ module.exports = {
 
   // pause before performing file-count sanity check in ms
   pauseBeforeSanity : 2000,
-  nukeSource: false,
 
   outDir      : `/Volumes/cbr/Western`,
 
@@ -21,6 +20,8 @@ module.exports = {
   useCustomGetPage: true,
 
   skipOmake: false,
+
+  nukeSource: true,
 
   completedSelector: '',
 
