@@ -19,7 +19,6 @@
     "command-line-args": "^5.0.2",
     "command-line-usage": "^5.0.5",
     "deepmerge": "^3.2.0",
-    "expect.js": "^0.3.1",
     "extract-zip": "^1.6.7",
     "mkdirp": "^0.5.1",
     "puppeteer": "^1.12.2",
@@ -30,6 +29,7 @@
     "zlib": "^1.0.5"
   },
   "devDependencies": {
+    "expect.js": "^0.3.1",
     "mocha": "^6.0.2"
   }
 }
