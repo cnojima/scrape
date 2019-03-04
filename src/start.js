@@ -12,7 +12,9 @@ const chapterCleanup      = require('./util/chapter-cleanup');
 const generateSeqName     = require('./util/generate-sequence-name.js');
 
 
-module.exports = (options, config, site, callback) => {
+let redoMax = 10;
+
+const start = (options, config, site, callback) => {
   const getChapter  = require(`./${site}/get-chapter`);
   let getPage       = getPageCommon;
   let getCollection = getCollectionCommon;
@@ -49,14 +51,6 @@ module.exports = (options, config, site, callback) => {
 
       chapters.reverse();
 
-      l.debug(`chapters`);
-      l.debug(chapters.join('\n   '));
-
-
-
-
-
-
       const chapterIsDone = async () => {
         if (chapters.length > 0) {
           const c = chapters.shift();
@@ -67,12 +61,15 @@ module.exports = (options, config, site, callback) => {
             l.info(`working on ${c}`);
 
             const cleansedChapter = generateSeqName(c, config);
+            l.debug(`cleansedChapter [ ${cleansedChapter} ]`);
 
             // /Volumes/cbr/Yotsubato/010
             const imgDestDir = `${options.collectionPath}/${cleansedChapter}`;
+            l.debug(`imgDestDir [ ${imgDestDir} ]`);
 
             // /foo/bar/out/mangareader/comic-name/comic-name-009.cbz
             const cbzDest = `${options.collectionPath}/${path.basename(options.collectionPath)}-${cleansedChapter}.cbz`;
+            l.debug(`cbzDest [ ${cbzDest} ]`);
 
             // skip if CBZ exists
             if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
@@ -101,6 +98,7 @@ module.exports = (options, config, site, callback) => {
               try {
                 await getThePages();
               } catch (err) {
+                global.errors = true;
                 l.error(`async get-page-parallel failure: ${err}`);
               }
 
@@ -119,7 +117,20 @@ module.exports = (options, config, site, callback) => {
 
           l.log(`DONE with ${options.url}`.green);
 
-          if (callback) {
+          if (global.errors) {
+            l.log(`ERRORS were detected.  Re-run get to retry.`.red);
+            redoMax--;
+
+            if (redoMax > 0) {
+              global.errors = false;
+              l.log('\n\n\n========================================'.green);
+              l.log(`Re-trying fetch.  ${redoMax} attempts left.`.green);
+              const restart = start(options, config, site, callback);
+              (async () => await restart())();
+            } else if (callback) {
+              callback();
+            }
+          } else if (callback) {
             callback();
           }
         }
@@ -128,7 +139,7 @@ module.exports = (options, config, site, callback) => {
       chapterIsDone();
     }
   } catch (err) {
-    l.error(`${config.outDir} is NOT accessible - ${err}`);
+    console.error(`${config.outDir} is NOT accessible - ${err}`);
   }
 };
 
@@ -136,3 +147,4 @@ module.exports = (options, config, site, callback) => {
 
 
 
+module.exports = start;
