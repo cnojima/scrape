@@ -1,13 +1,15 @@
-const fs          = require('fs');
-const path        = require('path');
-const mkdirp      = require('mkdirp');
-const Case        = require('case');
+/* eslint-disable no-await-in-loop, no-await-in-loop, no-restricted-syntax */
 
-const l           = require('../util/log');
-const createCbz   = require('../util/create-cbz');
-const getPages    = require('./pages').getPages;
+const fs = require('fs');
+const path = require('path');
+const mkdirp = require('mkdirp');
+const Case = require('case');
+
+const l = require('../util/log');
+const createCbz = require('../util/create-cbz');
+const { getPages } = require('./pages');
 const handleTiles = require('./tiles');
-const tileQuery   = require('./queries').tileQuery;
+const { tileQuery } = require('./queries');
 
 
 /**
@@ -16,10 +18,10 @@ const tileQuery   = require('./queries').tileQuery;
  * @param {!PuppetPage} page
  * @param {!string} destPath  FQDN path to book save
  */
-const getBook = function(options, page, destPath) {
+const getBook = (options, page, destPath) => {
   const bookUrl = options.url;
 
-  return new Promise(async function(resolve, reject) {
+  return new Promise((async (resolve, reject) => {
     l.log(`[ @getBook ] going to ${bookUrl}`);
 
     const dir = Case.title(path.basename(bookUrl));
@@ -30,9 +32,10 @@ const getBook = function(options, page, destPath) {
 
     await page.goto(bookUrl);
 
-    await getPages(page, dest, bookUrl, getBook, options).catch(err => {
+    await getPages(page, dest, bookUrl, getBook, options).catch((err) => {
       global.errors = true;
       l.error(`ERROR: @getBook caught error: ${err}`);
+      reject(err);
     });
 
     if (!fs.existsSync(bookName) || options['force-archive'] === true) {
@@ -43,10 +46,8 @@ const getBook = function(options, page, destPath) {
     }
 
     resolve();
-  });
+  }));
 };
-
-
 
 
 /**
@@ -63,7 +64,7 @@ const getBooks = async (options, page, destPath) => {
 
   while (books.length > 0) {
     options.url = books.shift();
-    await getBook(options, page, destPath).catch(err => {
+    await getBook(options, page, destPath).catch((err) => {
       global.errors = true;
       l.warn(`@getBook threw an error: ${err}`);
     });
@@ -71,13 +72,12 @@ const getBooks = async (options, page, destPath) => {
 };
 
 
-
 const handleErroredBooks = async (page, destPath) => {
   l.log(`\n[ @handleErroredBooks ] redo-failures.  We have ${global.errors.length} volumes to redo.`.yellow);
   l.log(global.errors);
   const redoBooks = [];
 
-  for(let url in global.errors) {
+  for (const url in global.errors) {
     if (url !== 'length') {
       redoBooks.push(global.errors[url].url);
       delete global.errors[url];
@@ -94,8 +94,8 @@ const handleErroredBooks = async (page, destPath) => {
   if (global.errors.length > 0) {
     await handleErroredBooks(page, destPath);
   }
-}
+};
 
 module.exports = {
-  getBook, getBooks, handleErroredBooks
+  getBook, getBooks, handleErroredBooks,
 };

@@ -1,21 +1,21 @@
-const fs                  = require('fs');
-const path                = require('path');
-const mkdirp              = require('mkdirp');
-const rimraf              = require('rimraf');
+const fs = require('fs');
+const path = require('path');
+const mkdirp = require('mkdirp');
+const rimraf = require('rimraf');
 
-const getPageParallel     = require('./common/get-page-parallel');
-const getPageCommon       = require('./common/get-page');
+const getPageParallel = require('./common/get-page-parallel');
+const getPageCommon = require('./common/get-page');
 const getCollectionCommon = require('./common/get-collection');
-const l                   = require('./util/log');
-const chapterCleanup      = require('./util/chapter-cleanup');
-const generateSeqName     = require('./util/generate-sequence-name.js');
+const l = require('./util/log');
+const chapterCleanup = require('./util/chapter-cleanup');
+const generateSeqName = require('./util/generate-sequence-name.js');
 
 
 let redoMax = 10;
 
 const start = (options, config, site, callback) => {
-  const getChapter  = require(`./${site}/get-chapter`);
-  let getPage       = getPageCommon;
+  const getChapter = require(`./${site}/get-chapter`);
+  let getPage = getPageCommon;
   let getCollection = getCollectionCommon;
 
   // custom getCollection controller
@@ -49,7 +49,7 @@ const start = (options, config, site, callback) => {
      * @async
      */
     return async (goCallback) => {
-      const chapters = await getCollection(options, config).catch(err => {
+      const chapters = await getCollection(options, config).catch((err) => {
         l.error(`@getChapter got error ${err}`);
       });
 
@@ -59,8 +59,8 @@ const start = (options, config, site, callback) => {
         if (chapters.length > 0) {
           const c = chapters.shift();
 
-          if (config.skipOmake === false ||
-            (path.basename(c).indexOf('.') < 0 && path.basename(c).indexOf('-') < 0)
+          if (config.skipOmake === false
+            || (path.basename(c).indexOf('.') < 0 && path.basename(c).indexOf('-') < 0)
           ) {
             l.info(`working on ${c}`);
 
@@ -82,15 +82,15 @@ const start = (options, config, site, callback) => {
               // for cleanup
               completedChapters.push(imgDestDir);
 
-              const pages = await getChapter(c, options).catch(err => {
+              const pages = await getChapter(c, options).catch((err) => {
                 l.error(`[${c}] got error: ${err}`);
               });
 
               const pageCount = pages.length;
 
-              l.debug(`pages`);
+              l.debug('pages');
               l.debug(`\n   ${pages.join('\n   ')}`);
-              l.info(`${path.basename(options.collectionPath)}-${cleansedChapter} has [ ${pages.length} pages ] `)
+              l.info(`${path.basename(options.collectionPath)}-${cleansedChapter} has [ ${pages.length} pages ] `);
 
               // parallelize the image download
               const getThePages = getPageParallel(
@@ -105,7 +105,6 @@ const start = (options, config, site, callback) => {
                 global.errors = true;
                 l.error(`async get-page-parallel failure: ${err}`);
               }
-
             } else {
               l.info(`.${cbzDest.replace(__dirname, '')} exists - skipping chapter`);
               chapterIsDone();
@@ -122,7 +121,7 @@ const start = (options, config, site, callback) => {
           l.log(`DONE with ${options.url}`.green);
 
           if (global.errors) {
-            l.log(`ERRORS were detected.  Re-run get to retry.`.red);
+            l.log('ERRORS were detected.  Re-run get to retry.'.red);
             redoMax--;
 
             if (redoMax > 0) {
@@ -142,17 +141,14 @@ const start = (options, config, site, callback) => {
             goCallback();
           }
         }
-      }
+      };
 
       chapterIsDone();
-    }
+    };
   } catch (err) {
     console.error(`${config.outDir} is NOT accessible - ${err}`);
   }
 };
-
-
-
 
 
 module.exports = start;

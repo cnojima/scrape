@@ -1,10 +1,8 @@
-const fs      = require('fs');
-const path    = require('path');
-const req     = require('request-promise');
-const cheerio = require('cheerio');
+const fs = require('fs');
+const req = require('request-promise');
 
-const config  = require('../config/mangakakalot');
-const l       = require('../util/log');
+const config = require('../config/mangakakalot');
+const l = require('../util/log');
 const generateImgName = require('../util/generate-sequence-name');
 
 /**
@@ -12,20 +10,20 @@ const generateImgName = require('../util/generate-sequence-name');
  *
  * @param {!string} imgUrl URL to the image in a given page
  * @param {!string} imgDestDir Full path to the chapter directory to save image
- * @param {!object} options Options from CLI arguments
  * @return {promise}
  */
-module.exports = (imgUrl, imgDestDir, options) => {
+module.exports = (imgUrl, imgDestDir) => {
   l.debug(`GET'ing ${imgUrl}`);
+  let imgFinalName;
 
   return req.get({
     method: 'GET',
     encoding: null,
     timeout: config.reqTimeout,
-    url : imgUrl
-  }).then(function (res) {
+    url: imgUrl,
+  }).then((res) => {
     const genName = generateImgName(`${imgUrl}`, config);
-    const imgFinalName = `${imgDestDir}/${genName}`;
+    imgFinalName = `${imgDestDir}/${genName}`;
 
     l.debug(`saving ${imgFinalName}`);
     const buffer = Buffer.from(res, 'utf8');
@@ -41,12 +39,12 @@ module.exports = (imgUrl, imgDestDir, options) => {
       setTimeout(() => {
         try {
           fs.writeFileSync(imgFinalName, buffer);
-        } catch (err) {
-          l.error(`2nd attempt at fs.writeFileSync failed.  failing this image save.`);
+        } catch (err2) {
+          l.error('2nd attempt at fs.writeFileSync failed.  failing this image save.');
         }
       }, 100);
     }
-  }).catch(err => {
+  }).catch((err) => {
     global.errors = true;
     config.redo = true;
     l.error(`error in downloading img [mangakakalot] : ${err}`);
@@ -56,4 +54,4 @@ module.exports = (imgUrl, imgDestDir, options) => {
       fs.unlinkSync(imgFinalName);
     }
   });
-}
+};

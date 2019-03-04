@@ -7,23 +7,23 @@ const config = require('../');
 module.exports = {
   ...config,
 
-  name        : 'rco',
+  name: 'rco',
 
-  throttled   : 5,
+  throttled: 5,
 
   // pause before performing file-count sanity check in ms
-  pauseBeforeSanity : 10000,
+  pauseBeforeSanity: 10000,
 
-  outDir      : `/Volumes/cbr/Western`,
+  outDir: '/Volumes/cbr/Western',
 
   // logLevel    : 'DEBUG',
 
   completedSelector: 'span.label-danger',
 
-  imgSelector : 'img.img-responsive.scan-page',
+  imgSelector: 'img.img-responsive.scan-page',
 
   // collectionSelector for lists of pages
-  collectionSelector : {
+  collectionSelector: {
     attribute: 'href',
     selector: 'ul.chapters li a',
   },

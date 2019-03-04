@@ -1,28 +1,28 @@
-const fs       = require('fs');
-const path     = require('path');
+const fs = require('fs');
+const path = require('path');
 const archiver = require('archiver');
-const config   = require('../config');
-const log      = require('./log');
+const config = require('../config');
+const log = require('./log');
 
 /**
  * Generates zip file from folder name
  * @param {!object} item data object with target, source, final
  * @param {!function} done
  */
-module.exports = function(item, done) {
+module.exports = function (item, done) {
   log.debug(`zipping ${item.target}`);
 
   const zipFile = item.target;
   const sourceFolder = item.source;
   const archive = archiver('zip', {
-    prefix : item.prefix || `./resources/locales/`,
-    store  : config.zipStore
+    prefix: item.prefix || './resources/locales/',
+    store: config.zipStore,
   });
 
   const output = fs.createWriteStream(zipFile);
 
   // listen for all archive data to be written
-  output.on('close', function() {
+  output.on('close', () => {
     log.log(`${path.basename(zipFile)} creation complete`);
     log.log(`${archive.pointer()} total bytes`);
     log.log('archiver has been finalized and the output file descriptor has closed.');
@@ -30,7 +30,7 @@ module.exports = function(item, done) {
   });
 
   // good practice to catch this error explicitly
-  archive.on('error', function(err) {
+  archive.on('error', (err) => {
     log.error(err.toString());
     throw err;
   });

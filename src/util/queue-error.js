@@ -6,10 +6,10 @@ module.exports = (badWebp, book, pageUrl) => {
   if (!global.errors[volumeRoot]) {
     global.errors[volumeRoot] = {
       url: book,
-      page: [ pageUrl ]
-    }
+      page: [pageUrl],
+    };
     global.errors.length++;
   } else if (global.errors[volumeRoot]) {
     global.errors[volumeRoot].page.push(pageUrl);
   }
-}
+};

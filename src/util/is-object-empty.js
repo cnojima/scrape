@@ -1,11 +1,10 @@
-// jshint ignore: start
 // found at http://stackoverflow.com/questions/4994201/is-object-empty
 // Speed up calls to hasOwnProperty
-const hasOwnProperty = Object.prototype.hasOwnProperty;
+const { hasOwnProperty } = Object.prototype;
 
 module.exports = function isEmpty(obj) {
   // null and undefined are "empty"
-  if (obj == null) { 
+  if (obj == null) {
     return true;
   }
 
@@ -22,16 +21,16 @@ module.exports = function isEmpty(obj) {
   // If it isn't an object at this point
   // it is empty, but it can't be anything *but* empty
   // Is it empty?  Depends on your application.
-  if (typeof obj !== "object") {
+  if (typeof obj !== 'object') {
     return true;
   }
 
   // Otherwise, does it have any properties of its own?
   // Note that this doesn't handle
   // toString and valueOf enumeration bugs in IE < 9
-  let key;
-  for (key in obj) {
-    if (hasOwnProperty.call(obj, key)) {
+  const keys = Object.keys(obj);
+  for (let i = 0, n = keys.length; i < n; i++) {
+    if (hasOwnProperty.call(obj, keys[i])) {
       return false;
     }
   }

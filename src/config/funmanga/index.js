@@ -11,13 +11,13 @@ module.exports = {
 
   // logLevel: 'INFO',
 
-  outDir: `/Volumes/cbr/Manga`,
+  outDir: '/Volumes/cbr/Manga',
 
   // remove source files after CBZ creations
-  nukeSource       : true,
+  nukeSource: true,
 
   // padding length in chapter names
-  chapterPadLength : 4,
+  chapterPadLength: 4,
 
   // completedSelector
   completedSelector: 'dl dd:nth-child(4)',
@@ -26,7 +26,7 @@ module.exports = {
   imgSelector: 'img#chapter_img.img-responsive',
 
   // collectionSelector for lists of pages
-  collectionSelector : {
+  collectionSelector: {
     attribute: 'href',
     selector: 'ul.chapter-list a',
   },

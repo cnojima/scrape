@@ -1,4 +1,5 @@
-/** 
+/* eslint-disable */
+/**
  * Debug utility to dump to console a given JS object
  * @param {!any} o
  */

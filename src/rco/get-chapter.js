@@ -1,6 +1,6 @@
-const req     = require('request-promise');
+const req = require('request-promise');
 const cheerio = require('cheerio');
-const l       = require('../util/log');
+const l = require('../util/log');
 
 /**
  * Site-specific fetch for pages in a given chapter
@@ -9,29 +9,27 @@ const l       = require('../util/log');
  * @param {!object} config Configuration for the supported site.
  * @return {promise}
  */
-module.exports = (chapterUrl, options) => {
-  return req({
-    url: chapterUrl,
-    transform: body => cheerio.load(body)
-  })
-    .then($ => {
-      const ret = [];
+module.exports = chapterUrl => req({
+  url: chapterUrl,
+  transform: body => cheerio.load(body),
+})
+  .then(($) => {
+    const ret = [];
 
-      $(`select.selectpicker option`).each((i, opt) => {
-        const pageNum = $(opt).attr('value');
-        const url = `${chapterUrl}/${pageNum}`;
+    $('select.selectpicker option').each((i, opt) => {
+      const pageNum = $(opt).attr('value');
+      const url = `${chapterUrl}/${pageNum}`;
 
-        if (pageNum > 0 && ret.indexOf(url) < 0) {
-          ret.push(url);
-        }
-      });
-
-      return ret;
-    })
-
-    .catch(err => {
-      global.errors = true;
-      l.error(err);
-      process.exit(1);
+      if (pageNum > 0 && ret.indexOf(url) < 0) {
+        ret.push(url);
+      }
     });
-}
+
+    return ret;
+  })
+
+  .catch((err) => {
+    global.errors = true;
+    l.error(err);
+    process.exit(1);
+  });

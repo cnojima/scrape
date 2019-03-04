@@ -1,3 +1,4 @@
+/* eslint-disable global-require, import/no-dynamic-require */
 const fs          = require('fs');
 const l           = require('./log');
 const historyFile = `${process.cwd()}/out/history-old.json`;
@@ -10,9 +11,9 @@ module.exports = url => {
   let history = [];
 
   if (fs.existsSync(historyFile)) {
-    history = require(historyFile);
+    history = require(historyFile); // eslint-disable-line
   }
-  
+
   if (history.indexOf(url) < 0) {
     history.push(url);
   } else {
