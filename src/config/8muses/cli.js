@@ -3,7 +3,7 @@ const base = require('../cli-base');
 module.exports = [
   ...base,
 
-   {
+  {
     alias: 'c',
     defaultValue: false,
     description: 'Set this flag to operate on the URL as a collection.',

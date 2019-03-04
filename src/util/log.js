@@ -1,26 +1,23 @@
+/* eslint-disable default-case,no-console */
 /**
   process.env.LOG_LEVEL = ERROR | QUIET | WARN | LOG | INFO | DEBUG
  */
 
 let currentLevel = process.env.LOG_LEVEL || 'LOG';
 
-const fs           = require('fs');
-const mkdirp       = require('mkdirp');
-const DEBUG_LOG    = require('../config/logger').DEBUG_LOG;
-const ERROR_LOG    = require('../config/logger').ERROR_LOG;
-const INFO_LOG     = require('../config/logger').INFO_LOG;
-const WARN_LOG     = require('../config/logger').WARN_LOG;
-const levelMap = {};
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+
 const levels = {
-  ERROR : 0,
-  QUIET : 1,
-  WARN  : 2,
-  LOG   : 3,
-  INFO  : 5,
-  DEBUG : 8
+  ERROR: 0,
+  QUIET: 1,
+  WARN: 2,
+  LOG: 3,
+  INFO: 5,
+  DEBUG: 8,
 };
 
-let STANDARD_LOG = require('../config/logger').STANDARD_LOG;
+let { STANDARD_LOG } = require('../config/logger');
 
 
 /**
@@ -37,7 +34,7 @@ function setLogName(destFile) {
  * @param {!String} LOG_LEVEL
  */
 function setLogLevel(LOG_LEVEL) {
-  console.log(`setting LOG_LEVEL to ${LOG_LEVEL}`.white)
+  console.log(`setting LOG_LEVEL to ${LOG_LEVEL}`.white);
   currentLevel = levels[LOG_LEVEL];
 }
 
@@ -48,32 +45,11 @@ function setLogLevel(LOG_LEVEL) {
  * @return {string}
  */
 function padZero(s) {
-  s = (typeof s === 'string') ? s : new String(s);
+  s = (typeof s === 'string') ? s : String(s);
   s = '00'.slice(s.length) + s;
 
   return s;
 }
-
-
-const maxLen = 13;
-
-function padLeft(s, len) {
-  len = len || 7;
-  const pad = [];
-
-  len += Math.round(s.length / 2);
-
-  for(let i=0; i<len; i++) {
-    pad.push(' ');
-  }
-
-  return `${pad.join('').slice(s.length)}${s}`;
-}
-
-function padRight(s) {
-  return s.padEnd(maxLen, ' ');
-}
-
 
 /**
  * decorate the timestamp
@@ -85,30 +61,30 @@ function decorateTimeStamp(s) {
 
   return [
     '[',
-      d.getFullYear(), '-', padZero(d.getMonth() + 1), '-', padZero(d.getDate()), ' ',
-      padZero(d.getHours()), ':', padZero(d.getMinutes()), ':', padZero(d.getSeconds()),
+    d.getFullYear(), '-', padZero(d.getMonth() + 1), '-', padZero(d.getDate()), ' ',
+    padZero(d.getHours()), ':', padZero(d.getMinutes()), ':', padZero(d.getSeconds()),
     ']',
-    s
+    s,
   ].join('');
 }
 
 
 /**
  * write the log file
- * @param {String} log logfile
+ * @param {String} logFile logfile
  * @param {String} s
  */
-function writeLog(log, s) {
+function writeLog(logFile, s) {
   s = decorateTimeStamp(s);
   s += '\n';
 
-  const dir = log.slice(0, log.lastIndexOf('/') + 1);
+  const dir = logFile.slice(0, logFile.lastIndexOf('/') + 1);
 
   if (!fs.existsSync(dir)) {
     mkdirp.sync(dir);
   }
 
-  fs.appendFile(log, s.strip, () => null);
+  fs.appendFile(logFile, s.strip, () => null);
 }
 
 /**
@@ -148,13 +124,12 @@ function stdout(s, logLevel) {
 }
 
 
-
 /**
  * STD level log
  * @param {!string} s
  */
 function log(s) {
-  s = '[STDO] ' + s;
+  s = `[STDO] ${s}`;
   writeLog(STANDARD_LOG, s);
   stdout(s, levels.LOG);
 }
@@ -164,7 +139,7 @@ function log(s) {
  * @param {!string} s
  */
 function info(s) {
-  s = '[INFO] ' + s;
+  s = `[INFO] ${s}`;
   writeLog(STANDARD_LOG, s);
   stdout(s, levels.INFO);
 }
@@ -174,7 +149,7 @@ function info(s) {
  * @param {!string} s
  */
 function error(s) {
-  s = '[ERRO] ' + s;
+  s = `[ERRO] ${s}`;
   writeLog(STANDARD_LOG, s);
   stdout(s, levels.ERROR);
 }
@@ -184,7 +159,7 @@ function error(s) {
  * @param {!string} s
  */
 function warn(s) {
-  s = '[WARN] ' + s;
+  s = `[WARN] ${s}`;
   writeLog(STANDARD_LOG, s);
   stdout(s, levels.WARN);
 }
@@ -194,7 +169,7 @@ function warn(s) {
  * @param {!string} s
  */
 function debug(s) {
-  s = '[DBUG] ' + s;
+  s = `[DBUG] ${s}`;
   writeLog(STANDARD_LOG, s);
   stdout(s, levels.DEBUG);
 }
@@ -202,10 +177,10 @@ function debug(s) {
 module.exports = {
   setLogLevel,
   setLogName,
-  std   : log,
-  log   : log,
-  info  : info,
-  warn  : warn,
-  error : error,
-  debug : debug
+  std: log,
+  log,
+  info,
+  warn,
+  error,
+  debug,
 };

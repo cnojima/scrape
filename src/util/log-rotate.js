@@ -1,8 +1,7 @@
-const fs            = require('fs');
-const path          = require('path');
-const log           = require('./log');
-const zip           = require('./zip');
-
+const fs = require('fs');
+const path = require('path');
+const log = require('./log');
+const zip = require('./zip');
 
 
 /**
@@ -14,13 +13,13 @@ const zip           = require('./zip');
 function rotateArchives(basename, logDirFiles, config) {
   const { keepLogs, logDir } = config;
   let archiveIndex = 1;
-  const re = new RegExp(`${basename}\.([0-5]{1})`);
+  const re = new RegExp(`${basename}.([0-5]{1})`);
 
-  for (let i=0, n=logDirFiles.length; i<n; i++) {
+  for (let i = 0, n = logDirFiles.length; i < n; i++) {
     const f = logDirFiles[i];
 
     if (f.search(re) > -1) {
-      archiveIndex = parseInt(f.match(re)[1]);
+      archiveIndex = parseInt(f.match(re)[1], 10);
       break;
     }
   }
@@ -38,7 +37,7 @@ function rotateArchives(basename, logDirFiles, config) {
   }
 }
 
-module.exports = function(config, done) {
+module.exports = function (config, done) {
   log.info('Rotating logs (if necessary)');
   if (fs.existsSync(config.logDir)) {
     const logFiles = [];
@@ -46,13 +45,13 @@ module.exports = function(config, done) {
     logDirFiles.sort();
     logDirFiles.reverse();
 
-    logDirFiles.map(function(file) {
+    logDirFiles.forEach((file) => {
       if (file.indexOf('.log') > -1) {
         logFiles.push(file);
       }
     });
 
-    logFiles.forEach(function(file) {
+    logFiles.forEach((file) => {
       // > maxSize?
       const overSize = (parseInt(fs.statSync(`${config.logDir}/${file}`).size, 10) / (1024 * 1000) > config.maxSize);
 
@@ -74,9 +73,9 @@ module.exports = function(config, done) {
         zip({
           prefix: config.logDir,
           target: `${config.logDir}/${rotateName}.zip`,
-          source: rename
-        }, function() {
-          fs.unlink(rename, function(err) {
+          source: rename,
+        }, () => {
+          fs.unlink(rename, (err) => {
             if (err) {
               log.error(err);
             }

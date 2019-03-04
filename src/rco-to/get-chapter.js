@@ -1,12 +1,11 @@
-const fs                   = require('fs');
-const path                 = require('path');
+/* eslint-disable no-restricted-syntax, guard-for-in, no-await-in-loop, no-loop-func */
+const fs = require('fs');
+const path = require('path');
 
-const createCbz            = require('../util/create-cbz');
+const createCbz = require('../util/create-cbz');
 const generateSequenceName = require('../util/generate-sequence-name');
-const guessImageName       = require('../util/guess-image-name');
-const l                    = require('../util/log');
-const dump                 = require('../util/dump');
-const dp                   = require('../util/dump-puppeteer');
+const guessImageName = require('../util/guess-image-name');
+const l = require('../util/log');
 
 
 module.exports = async (options, config, browser, page, url, bookPath, cbzDest, isDone) => {
@@ -17,13 +16,13 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
   /**
    * handle response from rco.to
    */
-  const handleResponse = async resp => {
+  const handleResponse = async (resp) => {
     const headers = resp.headers();
     const request = await resp.request();
-    let url = new URL(request.url()).href;
+    const { href } = new URL(request.url());
 
-    if (url.substr(0, 4) !== 'data' && headers['content-type'] && headers['content-type'].indexOf('image/') > -1) {
-      responses[url] = resp;
+    if (href.substr(0, 4) !== 'data' && headers['content-type'] && headers['content-type'].indexOf('image/') > -1) {
+      responses[href] = resp;
     }
   };
 
@@ -32,10 +31,10 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
    * handle loading of page, process images
    */
   const handleLoad = async () => {
-    images = await page.$$eval(config.imgSelector, async arr => {
+    images = await page.$$eval(config.imgSelector, async (arr) => {
       const ret = [];
 
-      for (let i=0, n=arr.length; i<n; i++) {
+      for (let i = 0, n = arr.length; i < n; i++) {
         ret.push(arr[i].src);
       }
 
@@ -46,16 +45,16 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
 
     l.info(`@load for [ ${url} ] - we have ${images.length} images loaded`);
 
-    for (let i=0, n=images.length; i<n; i++) {
+    for (let i = 0, n = images.length; i < n; i++) {
       // see if we already have the page image
       let imageExists = false;
       let imgGuess;
 
       // some images are masked do not have a predictable order or extension
-      let pageNumber = generateSequenceName(`${i+1}`, config, true, false);
+      const pageNumber = generateSequenceName(`${i + 1}`, config, true, false);
       const guesses = guessImageName(pageNumber, config);
 
-      for(const ext in guesses) {
+      for (const ext in guesses) {
         imgGuess = `${bookPath}/${guesses[ext]}`;
 
         if (fs.existsSync(imgGuess)) {
@@ -98,13 +97,13 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
               try {
                 fs.writeFileSync(`${imgFinalName}${ext}`, buffer);
                 expectedImages++;
-              } catch (err) {
+              } catch (err2) {
                 l.error(`after 2 attempts ${imgFinalName}${ext} was unable to be saved`);
               }
             }, 100);
           }
         } else {
-          console.log(`${src} was not found in responses`.error);
+          l.error(`${src} was not found in responses`.error);
         }
       }
     }
@@ -127,20 +126,18 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
     } else {
       l.warn(`[ @get-collection ] no images were detected - captcha for [ ${url} ]?`);
       await page.screenshot({
-        path: `out/${url.replace(/[^a-z0-9\-\.\_]/gi, '_')}.png`
+        path: `out/${url.replace(/[^a-z0-9\-._]/gi, '_')}.png`,
       });
       // isDone(); if captcha, allow for manual non-headless
     }
   };
 
 
-
-
   page.on('response', handleResponse);
   page.on('load', handleLoad);
 
 
-  await page.goto(url).catch(err => {
+  await page.goto(url).catch((err) => {
     l.error(`going to [${url}] failed with ${err}`);
     process.exit();
   });
@@ -148,7 +145,7 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
   await page.waitForNavigation({
     timeout: 45000,
     // waitUntil: 'networkidle0'
-  }).catch(err => {
+  }).catch(() => {
     // do nothing - we don't care
     // console.log(err);
   });

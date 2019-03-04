@@ -1,7 +1,8 @@
-const fs             = require('fs');
-const l              = require('../util/log');
+/* eslint-disable guard-for-in, no-restricted-syntax, no-loop-func, no-console */
+const fs = require('fs');
+const l = require('../util/log');
 const guessImageName = require('../util/guess-image-name');
-const createCbz      = require('../util/create-cbz');
+const createCbz = require('../util/create-cbz');
 
 
 /**
@@ -14,11 +15,11 @@ const createCbz      = require('../util/create-cbz');
  * @param {!array} pages Array of URIs to a given collection's pages.
  * @param {!string} imgDestDir Full path to the image save destination directory (chapter root).
  * @param {!string} cbzDest Full path to the CBZ save directory (collection root).
- * @param {!AsyncFunction} getPage Async function to retrieve a given page/image - this can be site-specific.
- * @param {!function} chapterIsDone Callback function called when all pages and images are downloaded.
+ * @param {!AsyncFunction} getPage Site-specific async function to retrieve a given page/image.
+ * @param {!function} chapterIsDone Callback called when all pages and images are downloaded.
  * @return {AsyncFunction}
  */
-module.exports = function(
+module.exports = function (
   config,
   options,
   pages,
@@ -27,7 +28,6 @@ module.exports = function(
   getPage,
   chapterIsDone,
 ) {
-
   const pageCount = pages.length;
   const pagesDownloading = [];
   let pipes = 0;
@@ -35,8 +35,7 @@ module.exports = function(
   /**
    * @async
    */
-  async function getPage_forked() {
-
+  async function getPageForked() {
     if (pages.length > 0) {
       while (pipes <= config.throttled && pages.length > 0) {
         const pageUrl = pages.shift();
@@ -47,7 +46,7 @@ module.exports = function(
         let imgGuess;
         const guesses = guessImageName(pageUrl, config, true, false);
 
-        for(const ext in guesses) {
+        for (const ext in guesses) {
           imgGuess = `${imgDestDir}/${guesses[ext]}`;
 
           if (fs.existsSync(imgGuess)) {
@@ -57,7 +56,7 @@ module.exports = function(
         }
 
         if (imageExists) {
-          l.debug(`@getPage_forked: found ${imgGuess} - skipping`);
+          l.debug(`@getPageForked: found ${imgGuess} - skipping`);
         } else {
           pipes++;
 
@@ -66,7 +65,7 @@ module.exports = function(
               .then(() => {
                 pipes--;
               })
-              .catch(err => {
+              .catch((err) => {
                 global.errors = true;
                 l.error(`getPage error: ${err}`);
               }));
@@ -74,16 +73,15 @@ module.exports = function(
         }
       }
 
-      setTimeout(getPage_forked, 100);
-    } else if(pages.length === 0 && pipes === 0) {
-
+      setTimeout(getPageForked, 100);
+    } else if (pages.length === 0 && pipes === 0) {
       Promise.all(pagesDownloading).then(async () => {
-        l.debug(`All pagesDownloading promises resolved.`.green);
+        l.debug('All pagesDownloading promises resolved.'.green);
 
         const imgs = fs.readdirSync(imgDestDir);
 
         if (pageCount === imgs.length) {
-          await createCbz(imgDestDir, cbzDest, chapterIsDone).catch(err => {
+          await createCbz(imgDestDir, cbzDest, chapterIsDone).catch((err) => {
             global.errors = true;
             l.error(`caught createCbz error ${err}`);
           });
@@ -93,15 +91,14 @@ module.exports = function(
           config.redo = true;
           chapterIsDone();
         }
-      }).catch(err => {
+      }).catch((err) => {
         global.errors = true;
         l.warn(`allPromises for get-page-parallel caught an error: ${err}`);
       });
-
     } else {
-      setTimeout(getPage_forked, 100);
+      setTimeout(getPageForked, 100);
     }
   }
 
-  return getPage_forked;
+  return getPageForked;
 };

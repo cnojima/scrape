@@ -1,6 +1,6 @@
 /**
  * CONFIG FOR
- * https://www.8muses.com 
+ * https://www.8muses.com
  */
 
 const config = require('../');

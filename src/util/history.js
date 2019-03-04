@@ -1,5 +1,7 @@
-const fs          = require('fs');
-const l           = require('./log');
+/* eslint-disable global-require, import/no-dynamic-require */
+const fs = require('fs');
+const l = require('./log');
+
 const historyFile = `${process.cwd()}/out/history.json`;
 
 /**
@@ -20,16 +22,16 @@ module.exports = (options, config) => {
 
   history[options.url] = {
     options,
-    config
+    config,
   };
 
   const newHistory = {};
   const urls = Object.keys(history);
   urls.sort();
 
-  urls.forEach(url => {
+  urls.forEach((url) => {
     newHistory[url] = history[url];
   });
 
   fs.writeFileSync(historyFile, JSON.stringify(newHistory, null, 2), 'utf8');
-}
+};

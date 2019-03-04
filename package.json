@@ -7,6 +7,7 @@
     "node": ">=10.12"
   },
   "scripts": {
+    "lint": "eslint --fix src/**/*.js",
     "test": "mocha --recursive"
   },
   "author": "",
@@ -38,7 +39,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "eslint --fix && npm test",
+      "pre-commit": "npm run lint && npm test",
       "pre-push": "npm test"
     }
   }

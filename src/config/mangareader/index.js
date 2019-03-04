@@ -11,7 +11,7 @@ module.exports = {
 
   // logLevel: 'DEBUG',
 
-  outDir: `/Volumes/cbr/Manga`,
+  outDir: '/Volumes/cbr/Manga',
 
   // img selector
   imgSelector: 'img#img',

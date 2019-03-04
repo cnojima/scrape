@@ -9,21 +9,21 @@ module.exports = {
   name: 'mangakakalot',
 
   // throttled number of simultaneous requests
-  throttled        : 10,
+  throttled: 10,
 
   // padding length in chapter names
-  chapterPadLength : 4,
+  chapterPadLength: 4,
 
   // padding length in image names
-  imgPadLength     : 4,
+  imgPadLength: 4,
 
-  outDir: `/Volumes/cbr/Manga`,
+  outDir: '/Volumes/cbr/Manga',
 
   // img selector
   imgSelector: 'div#vungdoc img',
 
   // collectionSelector for lists of pages
-  collectionSelector : {
+  collectionSelector: {
     attribute: 'href',
     selector: 'div.chapter-list div.row a',
   },

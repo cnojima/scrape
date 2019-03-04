@@ -7,14 +7,14 @@ const config = require('../');
 module.exports = {
   ...config,
 
-  name        : 'omgbeaupeep',
+  name: 'omgbeaupeep',
 
-  throttled   : 5,
+  throttled: 5,
 
   // pause before performing file-count sanity check in ms
-  pauseBeforeSanity : 2000,
+  pauseBeforeSanity: 2000,
 
-  outDir      : `/Volumes/cbr/Western`,
+  outDir: '/Volumes/cbr/Western',
 
   useCustomGetCollection: true,
   useCustomGetPage: true,
@@ -25,10 +25,10 @@ module.exports = {
 
   completedSelector: '',
 
-  imgSelector : 'img.picture',
+  imgSelector: 'img.picture',
 
   // collectionSelector for lists of pages
-  collectionSelector : {
+  collectionSelector: {
     attribute: 'value',
     selector: 'select[name="chapter"] option',
   },

@@ -13,5 +13,9 @@
         "ecmaVersion": 2018
     },
     "rules": {
+        "no-param-reassign": "off",
+        "func-names": "off",
+        "no-console": "warn",
+        "no-plusplus": "off"
     }
 }

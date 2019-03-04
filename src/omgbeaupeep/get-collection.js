@@ -1,7 +1,4 @@
-const req     = require('request-promise');
-const cheerio = require('cheerio');
-const dump = require('../util/dump');
-const l       = require('../util/log');
+const l = require('../util/log');
 const getColl = require('../common/get-collection');
 
 /**
@@ -19,7 +16,7 @@ module.exports = async (options, config) => {
   const chapters = await getColl(options, config);
 
   if (chapters.length > 0) {
-    chapters.forEach(c => {
+    chapters.forEach((c) => {
       const fullUrl = `${options.url}/${c}`;
       if (ret.indexOf(fullUrl) < 0) {
         ret.push(fullUrl);
@@ -33,4 +30,4 @@ module.exports = async (options, config) => {
   l.log(`${options.name} has ${ret.length} issues`);
 
   return ret;
-}
+};

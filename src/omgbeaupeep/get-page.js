@@ -1,9 +1,9 @@
-const fs                   = require('fs');
-const path                 = require('path');
-const req                  = require('request-promise');
-const cheerio              = require('cheerio');
+const fs = require('fs');
+const path = require('path');
+const req = require('request-promise');
+const cheerio = require('cheerio');
 
-const l                    = require('../util/log');
+const l = require('../util/log');
 const generateSequenceName = require('../util/generate-sequence-name');
 
 
@@ -28,13 +28,13 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
   return req({
     url: pageUrl,
     timeout: config.reqTimeout,
-    transform: body => cheerio.load(body)
+    transform: body => cheerio.load(body),
   })
 
     .then($ => $(config.imgSelector).attr('src'))
 
-    .then(imgUrl => {
-      imgUrl = `${path.dirname(options.url)}/${imgUrl.replace(/\ /g, '%20')}`;
+    .then((imgUrl) => {
+      imgUrl = `${path.dirname(options.url)}/${imgUrl.replace(/ /g, '%20')}`;
       const ext = path.extname(imgUrl);
       const genName = generateSequenceName(`${pageUrl}${ext}`, config);
       const imgFinalName = `${imgDestDir}/${genName}`;
@@ -45,8 +45,8 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
         method: 'GET',
         encoding: null,
         timeout: config.reqTimeout,
-        url : imgUrl
-      }).then(function (res) {
+        url: imgUrl,
+      }).then((res) => {
         l.info(`saving ${imgFinalName}`);
         const buffer = Buffer.from(res, 'utf8');
 
@@ -60,19 +60,19 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
           setTimeout(() => {
             try {
               fs.writeFileSync(imgFinalName, buffer);
-            } catch (err) {
-              l.error(`2nd attempt at fs.writeFileSync failed.  failing this image save.`);
+            } catch (err2) {
+              l.error('2nd attempt at fs.writeFileSync failed.  failing this image save.');
             }
           }, 100);
         }
-      }).catch(err => {
+      }).catch((err) => {
         global.errors = true;
         config.redo = true;
         l.error(`error in downloading img ${err}`);
       });
     })
 
-    .catch(err => {
+    .catch((err) => {
       global.errors = true;
       config.redo = true;
       l.error(err);
