@@ -43,7 +43,12 @@ const start = (options, config, site, callback) => {
 
     const completedChapters = [];
 
-    return async () => {
+    /**
+     * @param {?goCallback} after all chapters processed, execute callback
+     * @return async Function
+     * @async
+     */
+    return async (goCallback) => {
       const chapters = await getCollection(options, config).catch(err => {
         l.error(`@getChapter got error ${err}`);
       });
@@ -128,9 +133,13 @@ const start = (options, config, site, callback) => {
               (async () => await restart())();
             } else if (callback) {
               callback();
+            } else if (goCallback) {
+              goCallback();
             }
           } else if (callback) {
             callback();
+          } else if (goCallback) {
+            goCallback();
           }
         }
       }

@@ -92,12 +92,12 @@ if (!options.url) {
     history(options, config);
 
     (async () => {
-      await start();
-
-      if (options['update']) {
-        l.log('Starting YAC Librar(ies) Updates - this may take a few minutes.'.green);
-        execSync('./bin/update-yac.sh');
-      }
+      await start(() => {
+        if (options['update']) {
+          l.log('Starting YAC Librar(ies) Updates - this may take a few minutes.'.green);
+          execSync('./bin/update-yac.sh');
+        }
+      });
     })();
   });
 }
