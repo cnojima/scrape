@@ -33,17 +33,18 @@ module.exports = (imgUrl, imgDestDir, options) => {
     try {
       fs.writeFileSync(imgFinalName, buffer);
     } catch (err) {
-
       global.errors = true;
       config.redo = true;
-      l.error(`error in downloading img [mangakakalot] : ${err}`);
 
-      if (fs.existsSync(imgFinalName)) {
-        l.warn(`deleting errored image asset [ ${imgFinalName} ]`);
-        l.warn(`origin URL [ ${imgUrl} ]`);
-        fs.unlinkSync(imgFinalName);
-      }
+      l.error(`error in downloading img [mangakakalot] : ${err} - trying again`);
 
+      setTimeout(() => {
+        try {
+          fs.writeFileSync(imgFinalName, buffer);
+        } catch (err) {
+          l.error(`2nd attempt at fs.writeFileSync failed.  failing this image save.`);
+        }
+      }, 100);
     }
   }).catch(err => {
     global.errors = true;

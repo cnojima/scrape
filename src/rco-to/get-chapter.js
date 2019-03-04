@@ -90,7 +90,18 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
             expectedImages++;
           } catch (err) {
             global.errors = true;
-            l.error(`fs.writeFileSync failed with ${err}`);
+            l.error(`fs.writeFileSync failed with ${err} - trying again`);
+
+            setTimeout(() => {
+              l.info(`retrying ${imgFinalName}${ext}`.cyan);
+
+              try {
+                fs.writeFileSync(`${imgFinalName}${ext}`, buffer);
+                expectedImages++;
+              } catch (err) {
+                l.error(`after 2 attempts ${imgFinalName}${ext} was unable to be saved`);
+              }
+            }, 100);
           }
         } else {
           console.log(`${src} was not found in responses`.error);
