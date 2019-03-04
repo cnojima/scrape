@@ -38,6 +38,8 @@ const getCollection = (browser, page, options, config) => {
         mkdirp.sync(bookPath);
         toNuke.push(bookPath);
 
+        l.debug(`checking if ${cbzDest} exists: ${fs.existsSync(cbzDest)}`);
+
         if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
           getChapter(options, config, browser, page, url, bookPath, cbzDest, isDone);
         } else {
@@ -63,7 +65,6 @@ const getCollection = (browser, page, options, config) => {
       waitUntil: 'load'
     }).catch(err => {
       // do nothing - we don't care
-      l.error(err);
     });
 
     const { selector, attribute } = config.collectionSelector;

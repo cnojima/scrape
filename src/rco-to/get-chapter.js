@@ -42,6 +42,8 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
       return ret;
     });
 
+    let expectedImages = 0;
+
     l.info(`@load for [ ${url} ] - we have ${images.length} images loaded`);
 
     for (let i=0, n=images.length; i<n; i++) {
@@ -63,6 +65,7 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
       }
 
       if (imageExists) {
+        expectedImages++;
         l.debug(`@getPage_forked: found ${imgGuess} - skipping`);
       } else {
         const src = images[i];
@@ -81,7 +84,14 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
           }
 
           l.info(`saving ${imgFinalName}${ext}`);
-          fs.writeFileSync(`${imgFinalName}${ext}`, buffer);
+
+          try {
+            fs.writeFileSync(`${imgFinalName}${ext}`, buffer);
+            expectedImages++;
+          } catch (err) {
+            global.errors = true;
+            l.error(`fs.writeFileSync failed with ${err}`);
+          }
         } else {
           console.log(`${src} was not found in responses`.error);
         }
@@ -89,18 +99,26 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
     }
 
     if (images.length > 0) {
-      if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
-        page.removeListener('load', handleLoad);
-        page.removeListener('response', handleResponse);
-        createCbz(bookPath, cbzDest, isDone);
+      if (images.length === expectedImages) {
+        if (!fs.existsSync(cbzDest) || options['force-archive'] === true) {
+          page.removeListener('load', handleLoad);
+          page.removeListener('response', handleResponse);
+          createCbz(bookPath, cbzDest, isDone);
+        } else {
+          global.errors = true;
+          l.info(`[ @getBook ] found ${cbzDest} - not rebuilding CBZ`);
+          isDone();
+        }
       } else {
-        l.info(`[ @getBook ] found ${cbzDest} - not rebuilding CBZ`);
+        l.warn(`expected ${images.length} images - found ${expectedImages} - not generating an incomplete CBZ`);
+        isDone();
       }
     } else {
       l.warn(`[ @get-collection ] no images were detected - captcha for [ ${url} ]?`);
       await page.screenshot({
         path: `out/${url.replace(/[^a-z0-9\-\.\_]/gi, '_')}.png`
       });
+      // isDone(); if captcha, allow for manual non-headless
     }
   };
 
