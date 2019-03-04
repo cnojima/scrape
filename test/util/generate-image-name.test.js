@@ -10,6 +10,7 @@ describe('Testing [ src/util/guess-image-name ]', () => {
 
     expect(res).to.eql({
       jpg: `007.jpg`,
+      jpeg: `007.jpeg`,
       png: `007.png`,
       webp: `007.webp`,
       gif: `007.gif`,
@@ -22,6 +23,7 @@ describe('Testing [ src/util/guess-image-name ]', () => {
 
     expect(res).to.eql({
       jpg: `007.jpg`,
+      jpeg: `007.jpeg`,
       png: `007.png`,
       webp: `007.webp`,
       gif: `007.gif`,
@@ -35,6 +37,7 @@ describe('Testing [ src/util/guess-image-name ]', () => {
 
     expect(res).to.eql({
       jpg: `007.jpg`,
+      jpeg: `007.jpeg`,
       png: `007.png`,
       webp: `007.webp`,
       gif: `007.gif`,

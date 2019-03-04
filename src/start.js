@@ -2,7 +2,6 @@ const fs                  = require('fs');
 const path                = require('path');
 const mkdirp              = require('mkdirp');
 const rimraf              = require('rimraf');
-const Case                = require('case');
 
 const getPageParallel     = require('./common/get-page-parallel');
 const getPageCommon       = require('./common/get-page');

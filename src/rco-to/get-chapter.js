@@ -135,7 +135,7 @@ module.exports = async (options, config, browser, page, url, bookPath, cbzDest, 
   });
   // we'll allow 15s for error
   await page.waitForNavigation({
-    timeout: 30000,
+    timeout: 45000,
     // waitUntil: 'networkidle0'
   }).catch(err => {
     // do nothing - we don't care

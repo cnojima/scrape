@@ -13,4 +13,12 @@ describe('Testing [ src/util/generate-sequence-name ]', () => {
     assert.equal(res1, '009.jpg');
     assert.equal(res2, '0002.jpg');
   });
+
+  it('should be sensitive to TPB in the book name to represent a trade paperback collection', () => {
+    const tpbUrl1 = 'https://readcomiconline.to/Comic/Chew/TPB-1-Taster-s-Choise?id=2965';
+    const tpbUrl2= 'https://readcomiconline.to/Comic/Chew/TPB-1-Taster-s-Choise-Bonus?id=2966';
+
+    const res1 = gsn(tpbUrl1, config);
+    assert.equal(res1, 'TPB 1 Taster S Choise');
+  });
 });
