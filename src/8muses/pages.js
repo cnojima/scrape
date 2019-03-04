@@ -69,8 +69,24 @@ const getPage = (url, dest, page, book, options) => {
           url : img
         }).then(function (res) {
           const buffer = Buffer.from(res, 'utf8');
-          fs.writeFileSync(imgDest, buffer);
-          l.debug(`saved ${imgDest}`);
+
+          try {
+            fs.writeFileSync(imgDest, buffer);
+            l.debug(`saved ${imgDest}`);
+          } catch (err) {
+            global.errors = true;
+            config.redo = true;
+            l.error(`@getPage fs.writeFileSync failed with ${err} - trying again`);
+
+            setTimeout(() => {
+              try {
+                fs.writeFileSync(imgDest, buffer);
+              } catch (err) {
+                l.error(`2nd attempt at fs.writeFileSync failed.  failing this image save.`);
+              }
+            }, 100);
+
+          }
         }).catch(err => {
           global.errors = true;
           l.error(`error in downloading img ${err}`);

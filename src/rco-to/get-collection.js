@@ -19,13 +19,8 @@ const getCollection = (browser, page, options, config) => {
       } else {
         l.debug(`@getCollection - ${books.length} books to process`.cyan);
         const url = books.pop();
-        const Url = new URL(url);
         const book = generateSequenceName(
-          path.basename(
-            urln.format(
-              Url, { fragment: false, unicode: true, auth: false, search: false }
-            )
-          ).replace('Issue-', ''),
+          url.replace('Issue-', ''),
           config,
           false,
           false

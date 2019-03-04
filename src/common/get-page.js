@@ -46,7 +46,22 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
       }).then(function (res) {
         l.info(`saving ${imgFinalName}`);
         const buffer = Buffer.from(res, 'utf8');
-        fs.writeFileSync(`${imgFinalName}`, buffer);
+
+        try {
+          fs.writeFileSync(imgFinalName, buffer);
+        } catch (err) {
+          global.errors = true;
+          config.redo = true;
+          l.error(`@getPage fs.writeFileSync failed with ${err} - trying again`);
+
+          setTimeout(() => {
+            try {
+              fs.writeFileSync(imgFinalName, buffer);
+            } catch (err) {
+              l.error(`2nd attempt at fs.writeFileSync failed.  failing this image save.`);
+            }
+          }, 100);
+        }
       }).catch(err => {
         global.errors = true;
         config.redo = true;
