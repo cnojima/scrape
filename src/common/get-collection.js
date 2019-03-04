@@ -29,13 +29,16 @@ module.exports = (options, config) => {
     $(selector).each((i, a) => {
       const url = $(a).attr(attribute);
 
+
       if (ret.indexOf(url) < 0) {
+        l.debug(`chapter URL: ${url}`);
         ret.push(url);
       }
     });
 
     return ret;
   }).catch(err => {
+    global.errors = true;
     config.redo = true;
     l.error(err);
   });

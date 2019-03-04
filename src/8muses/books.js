@@ -12,7 +12,7 @@ const tileQuery   = require('./queries').tileQuery;
 
 /**
  * scrapes one book
- * @param {!object} options  
+ * @param {!object} options
  * @param {!PuppetPage} page
  * @param {!string} destPath  FQDN path to book save
  */
@@ -31,6 +31,7 @@ const getBook = function(options, page, destPath) {
     await page.goto(bookUrl);
 
     await getPages(page, dest, bookUrl, getBook, options).catch(err => {
+      global.errors = true;
       l.error(`ERROR: @getBook caught error: ${err}`);
     });
 
@@ -62,7 +63,10 @@ const getBooks = async (options, page, destPath) => {
 
   while (books.length > 0) {
     options.url = books.shift();
-    await getBook(options, page, destPath);
+    await getBook(options, page, destPath).catch(err => {
+      global.errors = true;
+      l.warn(`@getBook threw an error: ${err}`);
+    });
   }
 };
 

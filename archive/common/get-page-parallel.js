@@ -27,25 +27,20 @@ module.exports = function(
   getPage,
   chapterIsDone,
 ) {
-
   const pageCount = pages.length;
-  const pagesDownloading = [];
   let pipes = 0;
 
-  /**
-   * @async
-   */
   async function getPage_forked() {
 
     if (pages.length > 0) {
       while (pipes <= config.throttled && pages.length > 0) {
         const pageUrl = pages.shift();
-        // l.debug(`fork for ${pageUrl}`.red);
+        l.debug(`fork for ${pageUrl}`.red);
 
         // see if we already have the page image
         let imageExists = false;
         let imgGuess;
-        const guesses = guessImageName(pageUrl, config, true, false);
+        const guesses = guessImageName(pageUrl, config);
 
         for(const ext in guesses) {
           imgGuess = `${imgDestDir}/${guesses[ext]}`;
@@ -61,43 +56,32 @@ module.exports = function(
         } else {
           pipes++;
 
-          setTimeout(() => {
-            pagesDownloading.push(getPage(pageUrl, imgDestDir, options, config)
-              .then(() => {
-                pipes--;
-              })
-              .catch(err => {
-                global.errors = true;
-                l.error(`getPage error: ${err}`);
-              }));
-          }, 1);
+          getPage(pageUrl, imgDestDir, options, config)
+            .then(() => {
+              pipes--;
+            })
+            .catch(err => {
+              global.errors = true;
+              l.error(`getPage error: ${err}`);
+            });
         }
       }
 
       setTimeout(getPage_forked, 100);
     } else if(pages.length === 0 && pipes === 0) {
+      l.debug(` ...pausing for ${config.pauseBeforeSanity / 1000}s before performing file-count sanity check`.green);
 
-      Promise.all(pagesDownloading).then(async () => {
-        l.debug(`All pagesDownloading promises resolved.`.green);
-
+      setTimeout(() => {
         const imgs = fs.readdirSync(imgDestDir);
-
         if (pageCount === imgs.length) {
-          await createCbz(imgDestDir, cbzDest, chapterIsDone).catch(err => {
-            global.errors = true;
-            l.error(`caught createCbz error ${err}`);
-          });
+          createCbz(imgDestDir, cbzDest, chapterIsDone);
         } else {
-          global.errors = true;
-          console.log(`DIR [ ${imgDestDir} ]: page count does NOT match image count`.red, `pages ${pageCount}`.cyan, `images: ${imgs.length}`);
+          console.log(`DIR [ ${imgDestDir} ]:`);
+          console.log(`page count does NOT match image count`.red, `pages ${pageCount}`.cyan, `images: ${imgs.length}`);
           config.redo = true;
           chapterIsDone();
         }
-      }).catch(err => {
-        global.errors = true;
-        l.warn(`allPromises for get-page-parallel caught an error: ${err}`);
-      });
-
+      }, config.pauseBeforeSanity);
     } else {
       setTimeout(getPage_forked, 100);
     }

@@ -30,6 +30,8 @@ module.exports = (options, config, site, callback) => {
 
       config.destPath = destPath;
 
+      pupOptions.headless = (options.headless === false) ? false : pupOptions.headless;
+
       const browser = await puppeteer.launch(pupOptions);
       const page = await browser.newPage();
 
@@ -39,7 +41,6 @@ module.exports = (options, config, site, callback) => {
       await page.setExtraHTTPHeaders(headers);
 
       getCollection(browser, page, options, config).then((toNuke) => {
-      // getCollection(page, options, config).then((toNuke) => {
         browser.close();
 
         if (config.nukeSource) {

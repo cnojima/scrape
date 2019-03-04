@@ -34,5 +34,17 @@ module.exports = [
     description: 'This help',
     name: 'help',
     type: Boolean
+  }, {
+    alias: 'P',
+    description: 'Execute puppeteer in non-headless mode (active browser).',
+    name: 'headless',
+    type: Boolean,
+    defaultValue: false
+  }, {
+    alias: 'U',
+    description: 'Update YAC Library Server libraries after fetch.',
+    name: 'update',
+    type: Boolean,
+    defaultValue: false
   }
 ];

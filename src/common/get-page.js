@@ -38,7 +38,7 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
 
       l.debug(`GET'ing ${imgUrl}`);
 
-      req.get({
+      return req.get({
         method: 'GET',
         encoding: null,
         timeout: config.reqTimeout,
@@ -48,13 +48,20 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
         const buffer = Buffer.from(res, 'utf8');
         fs.writeFileSync(`${imgFinalName}`, buffer);
       }).catch(err => {
+        global.errors = true;
         config.redo = true;
         l.error(`error in downloading img ${err}`);
-        // throw `wtf: ${imgUrl}`;
+
+        if (fs.existsSync(imgFinalName)) {
+          l.warn(`deleting errored image asset [ ${imgFinalName} ]`);
+          l.warn(`origin URL [ ${imgUrl} ]`);
+          fs.unlinkSync(imgFinalName);
+        }
       });
     })
 
     .catch(err => {
+      global.errors = true;
       config.redo = true;
       l.error(err);
     });

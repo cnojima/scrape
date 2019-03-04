@@ -1,15 +1,21 @@
+const config = require('../');
 /**
  * CONFIG FOR
  * https://mangakakalot.com
  */
-const config = require('../');
-
 module.exports = {
   ...config,
 
   name: 'mangakakalot',
 
-  // logLevel: 'DEBUG',
+  // throttled number of simultaneous requests
+  throttled        : 10,
+
+  // padding length in chapter names
+  chapterPadLength : 4,
+
+  // padding length in image names
+  imgPadLength     : 4,
 
   outDir: `/Volumes/cbr/Manga`,
 
