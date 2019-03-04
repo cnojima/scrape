@@ -1,4 +1,3 @@
-// const assert = require('assert');
 const expect = require('expect.js');
 const gsn    = require('../../src/util/guess-image-name');
 const config = require('../../src/config');
