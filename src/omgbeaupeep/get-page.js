@@ -51,6 +51,7 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
         const buffer = Buffer.from(res, 'utf8');
         fs.writeFileSync(`${imgFinalName}`, buffer);
       }).catch(err => {
+        global.errors = true;
         config.redo = true;
         l.error(`error in downloading img ${err}`);
         // throw `wtf: ${imgUrl}`;
@@ -58,6 +59,7 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
     })
 
     .catch(err => {
+      global.errors = true;
       config.redo = true;
       l.error(err);
     });

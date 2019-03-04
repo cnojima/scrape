@@ -29,9 +29,30 @@ module.exports = (imgUrl, imgDestDir, options) => {
 
     l.debug(`saving ${imgFinalName}`);
     const buffer = Buffer.from(res, 'utf8');
-    fs.writeFileSync(imgFinalName, buffer);
+
+    try {
+      fs.writeFileSync(imgFinalName, buffer);
+    } catch (err) {
+
+      global.errors = true;
+      config.redo = true;
+      l.error(`error in downloading img [mangakakalot] : ${err}`);
+
+      if (fs.existsSync(imgFinalName)) {
+        l.warn(`deleting errored image asset [ ${imgFinalName} ]`);
+        l.warn(`origin URL [ ${imgUrl} ]`);
+        fs.unlinkSync(imgFinalName);
+      }
+
+    }
   }).catch(err => {
-    l.error(`error in downloading img ${err}`);
-    // throw `wtf: ${imgUrl}`;
+    global.errors = true;
+    config.redo = true;
+    l.error(`error in downloading img [mangakakalot] : ${err}`);
+
+    if (fs.existsSync(imgFinalName)) {
+      l.warn(`deleting errored image asset [ ${imgFinalName} ]`);
+      fs.unlinkSync(imgFinalName);
+    }
   });
 }

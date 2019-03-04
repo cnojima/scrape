@@ -58,6 +58,7 @@ module.exports = (options, config, site, callback) => {
       }
     };
   } catch (err) {
+    global.errors = true;
     l.error(`${config.outDir} is NOT accessible - ${err}`);
   }
 };

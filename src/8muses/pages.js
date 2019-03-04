@@ -46,6 +46,7 @@ const getPage = (url, dest, page, book, options) => {
     } else if (fs.existsSync(imgDest)) {
       if (options.convertwebp) {
         await webp2png(imgDest, finalImg).catch(err => {
+          global.errors = true;
           if (options["is-collection"]) {
             reject(err);
           }
@@ -71,6 +72,7 @@ const getPage = (url, dest, page, book, options) => {
           fs.writeFileSync(imgDest, buffer);
           l.debug(`saved ${imgDest}`);
         }).catch(err => {
+          global.errors = true;
           l.error(`error in downloading img ${err}`);
           reject(`wtf: ${img}`)
         });
@@ -87,6 +89,8 @@ const getPage = (url, dest, page, book, options) => {
         // instead of an `image`/leaf-node, we have an `album`
         // reject('no img found ')
         l.warn(`expected an image, got an album - recursing in`.cyan);
+
+        global.errors = true;
 
         await getBook(url, page, dest);
       }
@@ -106,6 +110,7 @@ const getPages = async (page, dest, book, fnGetBook, options) => {
 
   while(pages.length > 0) {
     await getPage(pages.shift(), dest, page, book, options).catch(err => {
+      global.errors = true;
       l.error(`[ @getPages ] caught err: ${err}`);
     });
     process.stdout.write(`...${pages.length} left          \r`);

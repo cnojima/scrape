@@ -16,7 +16,7 @@ module.exports = (chapterUrl, options) => {
   })
     .then($ => {
       const ret = [];
-      
+
       $(`select.hidden-xs option`).each((i, opt) => {
         const v = $(opt).attr('value');
 
@@ -29,6 +29,7 @@ module.exports = (chapterUrl, options) => {
     })
 
     .catch(err => {
+      global.errors = true;
       l.error(err);
       process.exit(1);
     });
