@@ -31,7 +31,7 @@ const start = (options, config, site, callback) => {
     fs.accessSync(config.outDir);
 
     // build up collection -> chapter -> img paths, /Volumes/cbr/Manga/Yotsubato
-    options.collectionPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
+    options.collectionPath = path.resolve(process.cwd, config.outDir, options.outDir, options.name);
 
     // RCO adds `-YYYY` to the name
     if (site === 'rco' && options.collectionPath.search(/\ [\d]{4}$/) > -1) {

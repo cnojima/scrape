@@ -35,6 +35,12 @@ module.exports = [
     name: 'help',
     type: Boolean,
   }, {
+    alias: 'O',
+    description: 'Specify the output directory.  Can be relative to the default project `outDir`, but an absolute path will override completely.',
+    name: 'outDir',
+    type: String,
+    defaultValue: "",
+  }, {
     alias: 'P',
     description: 'Execute puppeteer in non-headless mode (active browser).',
     name: 'headless',

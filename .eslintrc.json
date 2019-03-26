@@ -15,7 +15,9 @@
     "rules": {
         "no-param-reassign": "off",
         "func-names": "off",
+        "max-len": "warn",
         "no-console": "warn",
+        "no-multi-assign": "warn",
         "no-plusplus": "off"
     }
 }
