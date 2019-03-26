@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
-const rimraf = require('rimraf');
 
 const getPageParallel = require('./common/get-page-parallel');
 const getPageCommon = require('./common/get-page');
@@ -27,12 +26,12 @@ const start = (options, config, site, callback) => {
   if (config.useCustomGetPage) {
     getPage = require(`./${site}/get-page`);
   }
-
+  
   try {
     fs.accessSync(config.outDir);
 
     // build up collection -> chapter -> img paths, /Volumes/cbr/Manga/Yotsubato
-    options.collectionPath = path.resolve(process.cwd, `${config.outDir}/${options.name}`);
+    options.collectionPath = path.resolve(process.cwd, config.outDir, options.outDir, options.name);
 
     // RCO adds `-YYYY` to the name
     if (site === 'rco' && options.collectionPath.search(/\ [\d]{4}$/) > -1) {

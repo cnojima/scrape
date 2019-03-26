@@ -54,13 +54,13 @@ const getCollection = (browser, page, options, config) => new Promise(async (res
 
   // we get the gatekeeper page
   await page.waitForNavigation({
-    timeout: 30000,
+    timeout: config.timeout,
     waitUntil: 'load',
   }).catch(() => {
     // do nothing - we don't care
   });
 
-  const { selector, attribute } = config.collectionSelector;
+  const { selector } = config.collectionSelector;
 
   books = await page.$$eval(selector, (arr) => {
     const ret = [];
@@ -68,7 +68,7 @@ const getCollection = (browser, page, options, config) => new Promise(async (res
     if (arr.length > 0) {
       for (let i = 0, n = arr.length; i < n; i++) {
         const a = arr[i];
-        ret.push(`${a[attribute]}&quality=hq`);
+        ret.push(`${a.href}&quality=hq`);
       }
     }
 

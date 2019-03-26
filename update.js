@@ -16,7 +16,7 @@ const l            = require('./src/util/log');
 const logRot       = require('./src/util/log-rotate');
 const isEmpty      = require('./src/util/is-object-empty');
 const history      = require('./out/history.json');
-const options      = cli(cliConfig);
+const optionsCli   = cli(cliConfig);
 
 let urls = [];
 
@@ -37,12 +37,14 @@ const go = () => {
         go();
       }
 
+      options = merge(optionsCli, options);
+
       options.name = options.name || Case.title(path.basename(options.url));
       options['force-archive'] = false;
 
       // readcomiconline.to
       if (options.url.toLowerCase().indexOf('readcomiconline.to') > -1) {
-        config = merge(require('./src/config/rco-to'), config);
+        config = merge(config, require('./src/config/rco-to'));
         start = require('./src/rco-to/start')(options, config, 'rco-to', go);
       } else
 
@@ -71,6 +73,11 @@ const go = () => {
         l.log(`UPDATING using options:`);
         for (const key in options) {
           l.log(`   ${key} : ${options[key]}`);
+        }
+
+        l.log(`UPDATING using config:`);
+        for (const key in config) {
+          l.log(`   ${key} : ${config[key]}`);
         }
 
         (async () => {
