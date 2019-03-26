@@ -16,7 +16,7 @@ const l            = require('./src/util/log');
 const logRot       = require('./src/util/log-rotate');
 const isEmpty      = require('./src/util/is-object-empty');
 const history      = require('./out/history.json');
-const options      = cli(cliConfig);
+const optionsCli   = cli(cliConfig);
 
 let urls = [];
 
@@ -37,6 +37,8 @@ const go = () => {
         go();
       }
 
+      options = merge(options, optionsCli);
+
       options.name = options.name || Case.title(path.basename(options.url));
       options['force-archive'] = false;
 
@@ -47,7 +49,7 @@ const go = () => {
       } else
 
       if (options.url.toLowerCase().indexOf('omgbeaupeep') > -1) {
-        config = merge(require('./src/config/omgbeaupeep'), config);
+        config = merge(config, require('./src/config/omgbeaupeep'));
         start = require('./src/start')(options, config, 'omgbeaupeep', go);
       } else if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
         config = merge(require('./src/config/rco'), config);
@@ -72,6 +74,13 @@ const go = () => {
         for (const key in options) {
           l.log(`   ${key} : ${options[key]}`);
         }
+
+        l.log(`UPDATING using config:`);
+        for (const key in config) {
+          l.log(`   ${key} : ${config[key]}`);
+        }
+
+        debugger;
 
         (async () => {
           await start();

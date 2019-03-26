@@ -13,6 +13,8 @@ const { getBooks } = require('./books');
 const { handleErroredBooks } = require('./books');
 
 
+global.errors = [];
+
 /**
  * @return {Function}
  */
