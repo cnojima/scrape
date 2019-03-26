@@ -10,11 +10,17 @@
             "name": "8muses",
             "program": "${workspaceFolder}/go",
             "args": [" https://www.8muses.com/comics/album/Fakku-Comics/E-musu-Aki/Flesh-Banquet-Manor", "-c"]
-        },        {
+        }, {
             "type": "node",
             "request": "launch",
             "name": "Update",
             "program": "${workspaceFolder}/update.js"
+        }, {
+            "type": "node",
+            "request": "launch",
+            "name": "outDir",
+            "program": "${workspaceFolder}/go",
+            "args": ["-O", "/var/tmp", "https://readcomiconline.to/Comic/Genius-Cartel"]
         }
     ]
 }

@@ -89,6 +89,11 @@ if (!options.url) {
       l.log(`   ${key} : ${options[key]}`);
     }
 
+    l.log(`UPDATING using config:`);
+    for (const key in config) {
+      l.log(`   ${key} : ${config[key]}`);
+    }
+
     history(options, config);
 
     (async () => {

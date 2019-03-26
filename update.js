@@ -37,19 +37,19 @@ const go = () => {
         go();
       }
 
-      options = merge(options, optionsCli);
+      options = merge(optionsCli, options);
 
       options.name = options.name || Case.title(path.basename(options.url));
       options['force-archive'] = false;
 
       // readcomiconline.to
       if (options.url.toLowerCase().indexOf('readcomiconline.to') > -1) {
-        config = merge(require('./src/config/rco-to'), config);
+        config = merge(config, require('./src/config/rco-to'));
         start = require('./src/rco-to/start')(options, config, 'rco-to', go);
       } else
 
       if (options.url.toLowerCase().indexOf('omgbeaupeep') > -1) {
-        config = merge(config, require('./src/config/omgbeaupeep'));
+        config = merge(require('./src/config/omgbeaupeep'), config);
         start = require('./src/start')(options, config, 'omgbeaupeep', go);
       } else if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
         config = merge(require('./src/config/rco'), config);
@@ -79,8 +79,6 @@ const go = () => {
         for (const key in config) {
           l.log(`   ${key} : ${config[key]}`);
         }
-
-        debugger;
 
         (async () => {
           await start();

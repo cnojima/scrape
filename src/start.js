@@ -1,7 +1,6 @@
 const fs = require('fs');
 const path = require('path');
 const mkdirp = require('mkdirp');
-const rimraf = require('rimraf');
 
 const getPageParallel = require('./common/get-page-parallel');
 const getPageCommon = require('./common/get-page');
@@ -27,7 +26,7 @@ const start = (options, config, site, callback) => {
   if (config.useCustomGetPage) {
     getPage = require(`./${site}/get-page`);
   }
-
+  
   try {
     fs.accessSync(config.outDir);
 
