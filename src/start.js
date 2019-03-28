@@ -81,6 +81,7 @@ const start = (options, config, site, callback) => {
 
     // RCO adds `-YYYY` to the name
     if (site === 'rco' && options.collectionPath.search(/ [\d]{4}$/) > -1) {
+      // eslint-disable-next-line max-len
       options.collectionPath = options.collectionPath.substring(0, (options.collectionPath.length - 5));
     }
 
@@ -194,7 +195,8 @@ const start = (options, config, site, callback) => {
       chapterIsDone();
     };
   } catch (err) {
-    console.error(`${config.outDir} is NOT accessible - ${err}`);
+    l.error(`${config.outDir} is NOT accessible - ${err}`);
+    process.exit(1);
   }
 };
 
