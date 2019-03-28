@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* eslint-disable no-unused-vars,import/order,no-multiple-empty-lines,no-console */
+/* eslint-disable */
 
 require('./src/util/init');
 const fs         = require('fs');
