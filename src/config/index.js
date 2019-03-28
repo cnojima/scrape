@@ -12,12 +12,6 @@ let config = {
   // STDOUT debug output on fetch/request calls
   debugRequest: false,
 
-  // use the site-specific getPage controller
-  useCustomGetPage: false,
-
-  // use the site-specific getCollection controller
-  useCustomGetCollection: false,
-
   // remove source files after CBZ creations
   nukeSource: true,
 

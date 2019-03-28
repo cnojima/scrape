@@ -9,24 +9,70 @@ const l = require('./util/log');
 const chapterCleanup = require('./util/chapter-cleanup');
 const generateSeqName = require('./util/generate-sequence-name.js');
 
+// custom controllers, pre-import for eslint & node 11.x
+const getChapterFunmanga = require('./funmanga/get-chapter');
+const getChapterMangakakalot = require('./mangakakalot/get-chapter');
+const getChapterMangareader = require('./mangareader/get-chapter');
+const getChapterOmgbeaupeep = require('./omgbeaupeep/get-chapter');
+const getChapterRco = require('./rco/get-chapter');
+const getChapterRcoTo = require('./rco-to/get-chapter');
+
+const getCollectionMangareader = require('./mangareader/get-collection');
+const getCollectionOmgbeaupeep = require('./omgbeaupeep/get-collection');
+const getCollectionRcoTo = require('./rco-to/get-collection');
+
+const getPageMangakakalot = require('./mangakakalot/get-page');
+const getPageOmgbeaupeep = require('./omgbeaupeep/get-page');
+
 
 let redoMax = 10;
 
+// eslint-disable-next-line consistent-return
 const start = (options, config, site, callback) => {
-  const getChapter = require(`./${site}/get-chapter`);
-  let getPage = getPageCommon;
-  let getCollection = getCollectionCommon;
+  let getChapter;
+  let getCollection;
+  let getPage;
 
-  // custom getCollection controller
-  if (config.useCustomGetCollection) {
-    getCollection = require(`./${site}/get-collection`);
+  switch (site) {
+    default:
+      getChapter = () => {
+        l.error(`${site} is unsupported.  Please add getChapter()`);
+        process.exit(1);
+      };
+      getPage = getPageCommon;
+      getCollection = getCollectionCommon;
+      // eslint-disable-next-line no-fallthrough
+
+    case 'funmanga':
+      getChapter = getChapterFunmanga;
+      break;
+
+    case 'mangakakalot':
+      getChapter = getChapterMangakakalot;
+      getPage = getPageMangakakalot;
+      break;
+
+    case 'mangareader':
+      getChapter = getChapterMangareader;
+      getCollection = getCollectionMangareader;
+      break;
+
+    case 'omgbeaupeep':
+      getChapter = getChapterOmgbeaupeep;
+      getCollection = getCollectionOmgbeaupeep;
+      getPage = getPageOmgbeaupeep;
+      break;
+
+    case 'rco':
+      getChapter = getChapterRco;
+      break;
+
+    case 'rco-to':
+      getChapter = getChapterRcoTo;
+      getCollection = getCollectionRcoTo;
+      break;
   }
 
-  // custom getPage controller
-  if (config.useCustomGetPage) {
-    getPage = require(`./${site}/get-page`);
-  }
-  
   try {
     fs.accessSync(config.outDir);
 
@@ -34,7 +80,7 @@ const start = (options, config, site, callback) => {
     options.collectionPath = path.resolve(process.cwd, config.outDir, options.outDir, options.name);
 
     // RCO adds `-YYYY` to the name
-    if (site === 'rco' && options.collectionPath.search(/\ [\d]{4}$/) > -1) {
+    if (site === 'rco' && options.collectionPath.search(/ [\d]{4}$/) > -1) {
       options.collectionPath = options.collectionPath.substring(0, (options.collectionPath.length - 5));
     }
 
@@ -89,7 +135,7 @@ const start = (options, config, site, callback) => {
 
               l.debug('pages');
               l.debug(`\n   ${pages.join('\n   ')}`);
-              l.info(`${path.basename(options.collectionPath)}-${cleansedChapter} has [ ${pages.length} pages ] `);
+              l.info(`${path.basename(options.collectionPath)}-${cleansedChapter} has [ ${pageCount} pages ] `);
 
               // parallelize the image download
               const getThePages = getPageParallel(
@@ -128,7 +174,10 @@ const start = (options, config, site, callback) => {
               l.log('\n\n\n========================================'.green);
               l.log(`Re-trying fetch.  ${redoMax} attempts left.`.green);
               const restart = start(options, config, site, callback);
-              (async () => await restart())();
+              (async () => {
+                await restart();
+                return null;
+              })();
             } else if (callback) {
               callback();
             } else if (goCallback) {

@@ -16,9 +16,6 @@ module.exports = {
 
   outDir: '/Volumes/cbr/Western',
 
-  useCustomGetCollection: true,
-  useCustomGetPage: true,
-
   skipOmake: false,
 
   nukeSource: true,

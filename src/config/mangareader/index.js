@@ -15,6 +15,4 @@ module.exports = {
 
   // img selector
   imgSelector: 'img#img',
-
-  useCustomGetCollection: true,
 };

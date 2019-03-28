@@ -17,7 +17,7 @@ const levels = {
   DEBUG: 8,
 };
 
-let { STANDARD_LOG } = require('../config/logger');
+let { logLevel: STANDARD_LOG } = require('../config/logger');
 
 
 /**

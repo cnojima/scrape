@@ -19,8 +19,9 @@ global.errors = [];
  * @return {Function}
  */
 module.exports = (options, config, site, callback) => {
-  const headers = require(`../config/${site}/headers`)(options.url);
-  const destPath = options.collectionPath = path.resolve(process.cwd, config.outDir, options.outDir, options.name);
+  const headers = require('../config/8muses/headers')(options.url);
+  const destPath = path.resolve(process.cwd(), config.outDir, options.outDir, options.name);
+  options.collectionPath = destPath;
 
   try {
     fs.accessSync(config.outDir);
@@ -58,5 +59,6 @@ module.exports = (options, config, site, callback) => {
   } catch (err) {
     global.errors = true;
     l.error(`${config.outDir} is NOT accessible - ${err}`);
+    process.exit(1);
   }
 };

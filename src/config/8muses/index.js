@@ -10,7 +10,8 @@ module.exports = {
 
   name: '8muses',
 
-  outDir: '/Volumes/p/__8muses',
+  // outDir: '/Volumes/p/__8muses',
+  // outDir: 'p:/__8muses',
 
   // img selector
   imgSelector: 'img.image',

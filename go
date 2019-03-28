@@ -1,8 +1,8 @@
 #!/usr/bin/env node --inspect
-
+/* eslint-disable no-console, global-require, no-global-assign,no-multiple-empty-lines  */
 global = {
   ...global,
-  completedVolumes: []
+  completedVolumes: [],
 };
 
 require('./src/util/init');
@@ -30,7 +30,7 @@ if (!options.url) {
   let start = () => {
     console.log(`\n\n\n[ ${options.url} ] is not supported`.yellow);
     console.log(usage);
-  }
+  };
 
   const checkUrl = options.url.toLowerCase();
 
@@ -84,21 +84,26 @@ if (!options.url) {
 
   logRot(config, () => {
     l.log('============================');
-    l.log(`START using options:`.green);
-    for (const key in options) {
-      l.log(`   ${key} : ${options[key]}`);
-    }
+    l.log('START using options:'.green);
 
-    l.log(`UPDATING using config:`);
-    for (const key in config) {
-      l.log(`   ${key} : ${config[key]}`);
-    }
+    Object.keys(options).forEach((key) => {
+      if ({}.prototype.hasOwnProperty.call(options, key)) {
+        l.log(`   ${key} : ${options[key]}`);
+      }
+    });
+
+    l.log('UPDATING using config:');
+    Object.keys(config).forEach((key) => {
+      if ({}.prototype.hasOwnProperty.call(config, key)) {
+        l.log(`   ${key} : ${config[key]}`);
+      }
+    });
 
     history(options, config);
 
     (async () => {
       await start(() => {
-        if (options['update']) {
+        if (options.update) {
           l.log('Starting YAC Librar(ies) Updates - this may take a few minutes.'.green);
           execSync('./bin/update-yac.sh');
         }

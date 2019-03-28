@@ -1,7 +1,8 @@
 #!/usr/bin/env node
+/* eslint-disable no-unused-vars,import/order,no-multiple-empty-lines,no-console */
 
 require('./src/util/init');
-const fs = require('fs');
+const fs         = require('fs');
 const path       = require('path');
 const url        = require('url');
 const Case       = require('case');
@@ -17,13 +18,13 @@ const urln                 = require('url');
 const mkdirp               = require('mkdirp');
 
 
-const config = require('./src/config/rco-to');
+const config = require('./src/config/8muses');
 // const url = ''https://2.bp.blogspot.com/-cLmxnTqDD_8/WguaAzb2EvI/AAAAAAAABBc/HkgGSeOvHEMKippF3H-T1DwpBlhwV6Z1wCHMYCw/s0/RCO008_w.jpg';
 const s = 'https://2.bp.blogspot.com/ire5GUyLquyR6bmT7Bw9oQDC2LpYU3mXA4AfrLxmbv5tC8So084dHcfHP2_KXDBfrPLYOWkkp3q7=s0';
 const foo = generateSequenceName(s, config, true);
 console.log(path.extname(s));
 console.log(path.extname('foo.jpg'));
-console.log(path.basename('0'))
+console.log(path.basename('0'));
 console.log(foo);
 
 console.log(path.basename('image/jpeg'));

@@ -13,11 +13,13 @@
         "ecmaVersion": 2018
     },
     "rules": {
-        "no-param-reassign": "off",
         "func-names": "off",
+        "linebreak-style": "off",
         "max-len": "warn",
         "no-console": "warn",
+        "no-param-reassign": "off",
         "no-multi-assign": "warn",
+        "no-multi-spaces": "warn",
         "no-plusplus": "off"
     }
 }
