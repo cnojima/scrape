@@ -1,8 +1,10 @@
-#!/usr/bin/env node --inspect
+#!/usr/bin/env node
+// --inspect
+/* eslint-disable global-require, no-global-assign, no-multi-spaces */
 
 global = {
   ...global,
-  completedVolumes: []
+  completedVolumes: [],
 };
 
 require('./src/util/init');
@@ -16,6 +18,7 @@ const l            = require('./src/util/log');
 const logRot       = require('./src/util/log-rotate');
 const isEmpty      = require('./src/util/is-object-empty');
 const history      = require('./out/history.json');
+
 const optionsCli   = cli(cliConfig);
 
 let urls = [];
@@ -33,9 +36,9 @@ const go = () => {
       go();
     } else {
       let start = () => {
-        console.log(`\n\n\n[ ${options.url} ] is not supported`.yellow);
+        l.log(`\n\n\n[ ${options.url} ] is not supported`.yellow);
         go();
-      }
+      };
 
       options = merge(optionsCli, options);
 
@@ -70,15 +73,19 @@ const go = () => {
 
       logRot(config, () => {
         l.log('\n============================');
-        l.log(`UPDATING using options:`);
-        for (const key in options) {
-          l.log(`   ${key} : ${options[key]}`);
-        }
+        l.log('UPDATING using options:');
+        Object.keys(options).forEach((key) => {
+          if ({}.hasOwnProperty.call(options, key)) {
+            l.log(`   ${key} : ${options[key]}`);
+          }
+        });
 
-        l.log(`UPDATING using config:`);
-        for (const key in config) {
-          l.log(`   ${key} : ${config[key]}`);
-        }
+        l.log('UPDATING using config:');
+        Object.keys(config).forEach((key) => {
+          if ({}.hasOwnProperty.call(config, key)) {
+            l.log(`   ${key} : ${config[key]}`);
+          }
+        });
 
         (async () => {
           await start();
@@ -86,10 +93,10 @@ const go = () => {
       });
     }
   } else {
-    console.log(`DONE`.green);
+    l.log('DONE'.green);
     l.log('Starting YAC Librar(ies) Updates - this may take a few minutes.'.green);
     execSync('./bin/update-yac.sh');
   }
-}
+};
 
 go();

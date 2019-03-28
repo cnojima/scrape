@@ -1,5 +1,6 @@
-#!/usr/bin/env node --inspect
-/* eslint-disable no-console, global-require, no-global-assign,no-multiple-empty-lines  */
+#!/usr/bin/env node
+// #--inspect
+/* eslint-disable max-len,no-console,global-require,no-global-assign,no-multiple-empty-lines,no-multi-spaces */
 global = {
   ...global,
   completedVolumes: [],
@@ -87,14 +88,14 @@ if (!options.url) {
     l.log('START using options:'.green);
 
     Object.keys(options).forEach((key) => {
-      if ({}.prototype.hasOwnProperty.call(options, key)) {
+      if ({}.hasOwnProperty.call(options, key)) {
         l.log(`   ${key} : ${options[key]}`);
       }
     });
 
     l.log('UPDATING using config:');
     Object.keys(config).forEach((key) => {
-      if ({}.prototype.hasOwnProperty.call(config, key)) {
+      if ({}.hasOwnProperty.call(config, key)) {
         l.log(`   ${key} : ${config[key]}`);
       }
     });

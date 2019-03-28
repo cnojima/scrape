@@ -14,7 +14,7 @@ module.exports = {
   // pause before performing file-count sanity check in ms
   pauseBeforeSanity: 10000,
 
-  outDir: '/Volumes/cbr/Western',
+  // outDir: '/Volumes/cbr/Western',
 
   // logLevel    : 'DEBUG',
 

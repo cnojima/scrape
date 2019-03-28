@@ -30,19 +30,10 @@ let redoMax = 10;
 // eslint-disable-next-line consistent-return
 const start = (options, config, site, callback) => {
   let getChapter;
-  let getCollection;
-  let getPage;
+  let getCollection = getCollectionCommon;
+  let getPage = getPageCommon;
 
   switch (site) {
-    default:
-      getChapter = () => {
-        l.error(`${site} is unsupported.  Please add getChapter()`);
-        process.exit(1);
-      };
-      getPage = getPageCommon;
-      getCollection = getCollectionCommon;
-      // eslint-disable-next-line no-fallthrough
-
     case 'funmanga':
       getChapter = getChapterFunmanga;
       break;
@@ -71,6 +62,12 @@ const start = (options, config, site, callback) => {
       getChapter = getChapterRcoTo;
       getCollection = getCollectionRcoTo;
       break;
+
+    default:
+      getChapter = () => {
+        l.error(`${site} is unsupported.  Please add getChapter()`);
+        process.exit(1);
+      };
   }
 
   try {

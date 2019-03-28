@@ -17,7 +17,8 @@ const cookies = require('../config/rco-to/cookies');
  */
 module.exports = (options, config, site, callback) => {
   const headers = require('../config/rco-to/headers');
-  const destPath = options.collectionPath = path.resolve(process.cwd(), config.outDir, options.outDir, options.name);
+  options.collectionPath = path.resolve(process.cwd(), config.outDir, options.outDir, options.name);
+  const destPath = options.collectionPath;
 
   try {
     fs.accessSync(config.outDir);
