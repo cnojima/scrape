@@ -38,6 +38,8 @@ module.exports = (options, config, site, callback) => {
       }
       await page.setExtraHTTPHeaders(headers);
 
+      page.setDefaultTimeout(pupOptions.timeout);
+
       getCollection(browser, page, options, config).then((toNuke) => {
         browser.close();
 
