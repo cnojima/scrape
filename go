@@ -1,4 +1,4 @@
-#!/usr/bin/env node --inspect
+#!/usr/bin/env node
 
 global = {
   ...global,
@@ -98,6 +98,7 @@ if (!options.url) {
 
     (async () => {
       await start(() => {
+        l.warn(`asdlkfjasldfjaslfjslfjdlfj`)
         if (options['update']) {
           l.log('Starting YAC Librar(ies) Updates - this may take a few minutes.'.green);
           execSync('./bin/update-yac.sh');
