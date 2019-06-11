@@ -18,14 +18,14 @@ global.errors = [];
 /**
  * @return {Function}
  */
-module.exports = (options, config, site, callback) => {
+module.exports = (options, config, site) => {
   const headers = require(`../config/${site}/headers`)(options.url);
   const destPath = options.collectionPath = path.resolve(process.cwd, config.outDir, options.outDir, options.name);
 
   try {
     fs.accessSync(config.outDir);
 
-    return async () => {
+    return async (callback) => {
       // make sure target dir exists
       mkdirp.sync(destPath);
 

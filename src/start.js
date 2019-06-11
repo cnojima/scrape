@@ -12,7 +12,7 @@ const generateSeqName = require('./util/generate-sequence-name.js');
 
 let redoMax = 10;
 
-const start = (options, config, site, callback) => {
+const start = (options, config, site) => {
   const getChapter = require(`./${site}/get-chapter`);
   let getPage = getPageCommon;
   let getCollection = getCollectionCommon;
