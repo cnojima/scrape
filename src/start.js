@@ -47,7 +47,7 @@ const start = (options, config, site) => {
      * @return async Function
      * @async
      */
-    return async (goCallback) => {
+    return async (callback) => {
       const chapters = await getCollection(options, config).catch((err) => {
         l.error(`@getChapter got error ${err}`);
       });
@@ -127,17 +127,13 @@ const start = (options, config, site) => {
               global.errors = false;
               l.log('\n\n\n========================================'.green);
               l.log(`Re-trying fetch.  ${redoMax} attempts left.`.green);
-              const restart = start(options, config, site, callback);
-              (async () => await restart())();
+              const restart = start(options, config, site);
+              (async () => await restart(callback))();
             } else if (callback) {
               callback();
-            } else if (goCallback) {
-              goCallback();
             }
           } else if (callback) {
             callback();
-          } else if (goCallback) {
-            goCallback();
           }
         }
       };

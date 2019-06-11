@@ -45,24 +45,24 @@ const go = () => {
       // readcomiconline.to
       if (options.url.toLowerCase().indexOf('readcomiconline.to') > -1) {
         config = merge(config, require('./src/config/rco-to'));
-        start = require('./src/rco-to/start')(options, config, 'rco-to', go);
+        start = require('./src/rco-to/start')(options, config, 'rco-to');
       } else
 
       if (options.url.toLowerCase().indexOf('omgbeaupeep') > -1) {
         config = merge(require('./src/config/omgbeaupeep'), config);
-        start = require('./src/start')(options, config, 'omgbeaupeep', go);
+        start = require('./src/start')(options, config, 'omgbeaupeep');
       } else if (options.url.toLowerCase().indexOf('readcomicsonline') > -1) {
         config = merge(require('./src/config/rco'), config);
-        start = require('./src/start')(options, config, 'rco', go);
+        start = require('./src/start')(options, config, 'rco');
       } else if (options.url.toLowerCase().indexOf('mangakakalot') > -1) {
         config = merge(require('./src/config/mangakakalot'), config);
-        start = require('./src/start')(options, config, 'mangakakalot', go);
+        start = require('./src/start')(options, config, 'mangakakalot');
       } else if (options.url.toLowerCase().indexOf('mangareader') > -1) {
         config = merge(require('./src/config/mangareader'), config);
-        start = require('./src/start')(options, config, 'mangareader', go);
+        start = require('./src/start')(options, config, 'mangareader');
       } else if (options.url.toLowerCase().indexOf('funmanga') > -1) {
         config = merge(require('./src/config/funmanga'), config);
-        start = require('./src/start')(options, config, 'funmanga', go);
+        start = require('./src/start')(options, config, 'funmanga');
       }
 
       l.setLogLevel(process.env.LOG_LEVEL || config.logLevel);
@@ -81,7 +81,7 @@ const go = () => {
         }
 
         (async () => {
-          await start();
+          await start(go);
         })();
       });
     }
