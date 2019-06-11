@@ -52,13 +52,13 @@ module.exports = (pageUrl, imgDestDir, options, config) => {
         } catch (err) {
           global.errors = true;
           config.redo = true;
-          l.error(`@getPage fs.writeFileSync failed with ${err} - trying again`);
+          l.warn(`@getPage fs.writeFileSync failed for ${imgFinalName} with ${err} - trying again`);
 
           setTimeout(() => {
             try {
               fs.writeFileSync(imgFinalName, buffer);
             } catch (err2) {
-              l.error('2nd attempt at fs.writeFileSync failed.  failing this image save.');
+              l.error(`2nd attempt at fs.writeFileSync failed for ${imgFinalName}.  failing this image save.`);
             }
           }, 100);
         }
