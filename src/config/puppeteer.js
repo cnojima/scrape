@@ -1,4 +1,8 @@
 module.exports = {
+  args: [
+    '--disable-extensions',
+  ],
+
   defaultViewport: {
     width: 1200,
     height: 1000,
