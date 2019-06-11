@@ -51,6 +51,6 @@ module.exports = [
     description: 'Update YAC Library Server libraries after fetch.',
     name: 'update',
     type: Boolean,
-    defaultValue: false,
+    defaultValue: true,
   },
 ];
